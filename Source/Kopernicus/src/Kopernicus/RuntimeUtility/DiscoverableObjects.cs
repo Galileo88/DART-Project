@@ -40,7 +40,6 @@ namespace Kopernicus.RuntimeUtility
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, GameScenes.FLIGHT, GameScenes.TRACKSTATION, GameScenes.SPACECENTER)]
     public class DiscoverableObjects : ScenarioModule
     {
-        public static Boolean DidWeSpawnThatRock = false;
         // All asteroid configurations we know
         public static List<Asteroid> Asteroids { get; }
 
@@ -106,50 +105,6 @@ namespace Kopernicus.RuntimeUtility
             else if (RuntimeUtility.KopernicusConfig.UseKopernicusAsteroidSystem.ToLower().Equals("stock"))
             {
                 Debug.Log("[Kopernicus] Using stock Squad Asteroid Spawner.");
-                if (!DidWeSpawnThatRock)
-                {
-                    ConfigNode partNode = ProtoVessel.CreatePartNode("Dimorphos", 0);
-
-                    Orbit orbit = new Orbit(0, 0, 1180, 0, 0, 0, 0, Utility.FindBody(PSystemManager.Instance.systemPrefab.rootBody, "Didymos").celestialBody);
-                    ConfigNode discoveryNode = ProtoVessel.CreateDiscoveryNode(DiscoveryLevels.Presence, UntrackedObjectClass.I, 999, 999);
-                    /*ConfigNode resourceNode = new ConfigNode("RESOURCE");
-                    resourceNode.AddNode("name", "ore");
-                    resourceNode.AddNode("amount", "399985000");
-                    resourceNode.AddNode("maxAmount", "399985000");
-                    resourceNode.AddNode("flowState", "True");
-                    resourceNode.AddNode("isTweakable", "True");
-                    resourceNode.AddNode("hideFlow", "False");
-                    resourceNode.AddNode("isVisible", "True");
-                    resourceNode.AddNode("flowMode", "Both"); */
-                    ConfigNode[] additionalNodes = new ConfigNode[] { new ConfigNode("ACTIONGROUPS"), discoveryNode };
-                    partNode = partNode.AddNode("pos", "0,15,0");
-                    partNode = partNode.AddNode("attPos", "0,0,0");
-                    partNode = partNode.AddNode("attPos0", "0,15,0");
-                    partNode = partNode.AddNode("rot", "0,0,0,1");
-                    partNode = partNode.AddNode("attRot", "0,0,0,1");
-                    partNode = partNode.AddNode("attRot0", "0,0,0,1");
-                    partNode = partNode.AddNode("mir", "1,1,1");
-                    partNode = partNode.AddNode("symMethod", "Radial");
-                    partNode = partNode.AddNode("autostrutMode", "off");
-                    partNode = partNode.AddNode("rigidAttachment", "False");
-                    partNode = partNode.AddNode("istg", "-1");
-                    partNode = partNode.AddNode("resPri", "0");
-                    partNode = partNode.AddNode("dstg", "0");
-                    partNode = partNode.AddNode("sidx", "-1");
-                    partNode = partNode.AddNode("sqor", "-1");
-                    partNode = partNode.AddNode("sepI", "-1");
-                    partNode = partNode.AddNode("attm", "0");
-                    partNode = partNode.AddNode("sameVesselCollision", "True");
-                    partNode = partNode.AddNode("modCost", "0");
-                    partNode = partNode.AddNode("modMass", "0");
-                    partNode = partNode.AddNode("modSize", "0,0,0");
-                    ConfigNode vessel = ProtoVessel.CreateVesselNode("Dimorphos", VesselType.SpaceObject, orbit, 0, new ConfigNode[] { partNode });
-                    ProtoVessel protoVessel = new ProtoVessel(vessel, HighLogic.CurrentGame);
-                    protoVessel.Load(HighLogic.CurrentGame.flightState);
-                    GameEvents.onNewVesselCreated.Fire(protoVessel.vesselRef);
-                    DidWeSpawnThatRock = true;
-                }
-
             }
         }
 
