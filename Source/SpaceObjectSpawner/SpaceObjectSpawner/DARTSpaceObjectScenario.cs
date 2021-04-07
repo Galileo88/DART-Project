@@ -16,6 +16,23 @@ namespace DART.SpaceObjects
         const string kRecreateObjectsOnStart = "recreateObjectsOnStart";
         #endregion
 
+        #region Events
+        /// <summary>
+        /// Signifies that we have loaded the space objec templates
+        /// </summary>
+        public static EventVoid onSpaceObjectTemplatesLoaded = new EventVoid("onTemplatesLoaded");
+
+        /// <summary>
+        /// Signifies that we have loaded the space objec instances
+        /// </summary>
+        public static EventVoid onSpaceObjectInstancesLoaded = new EventVoid("onSpaceObjectInstancesLoaded");
+
+        /// <summary>
+        /// Signifies that we have created a new space object
+        /// </summary>
+        public static EventData<DARTSpaceObject> onSpaceObjectCreated = new EventData<DARTSpaceObject>("onSpaceObjectCreated");
+        #endregion
+
         #region Housekeeping
         /// <summary>
         /// Shared instance of the helper.
@@ -93,6 +110,7 @@ namespace DART.SpaceObjects
                     spaceObject = DARTSpaceObject.CreateFromNode(templateNodes[index]);
                     spaceObjectTemplates.Add(spaceObject);
                 }
+                onSpaceObjectTemplatesLoaded.Fire();
             }
 
             // Load space object instances list.
@@ -101,6 +119,8 @@ namespace DART.SpaceObjects
                 ConfigNode[] nodes = node.GetNodes(DARTSpaceObject.kNodeName);
                 for (int index = 0; index < nodes.Length; index++)
                     spaceObjects.Add(DARTSpaceObject.CreateFromNode(nodes[index]));
+
+                onSpaceObjectInstancesLoaded.Fire();
             }
         }
 

@@ -107,7 +107,7 @@ namespace DART.SpaceObjects
         public static DARTSpaceObject CreateFromNode(ConfigNode templateNode)
         {
             DARTSpaceObject spaceObject = new DARTSpaceObject();
-            Load(spaceObject, templateNode);
+            spaceObject.Load(spaceObject, templateNode);
             return spaceObject;
         }
 
@@ -132,7 +132,7 @@ namespace DART.SpaceObjects
         /// Copies the fields from another space object.
         /// </summary>
         /// <param name="copyFrom">The DARTSpaceObject whose fields we're interested in.</param>
-        public void CopyFrom(DARTSpaceObject copyFrom)
+        public virtual void CopyFrom(DARTSpaceObject copyFrom)
         {
             name = copyFrom.name;
             partName = copyFrom.partName;
@@ -155,7 +155,7 @@ namespace DART.SpaceObjects
         /// </summary>
         /// <param name="spaceObject">A DARTSpaceObject to load the data into.</param>
         /// <param name="node">A ConfigNode containing serialized data.</param>
-        public static void Load(DARTSpaceObject spaceObject, ConfigNode node)
+        public virtual void Load(DARTSpaceObject spaceObject, ConfigNode node)
         {
             if (node.HasValue(kName))
                 spaceObject.name = node.GetValue(kName);
@@ -231,8 +231,9 @@ namespace DART.SpaceObjects
             for (int index = 0; index < instancesToCreate; index++)
             {
                 DARTSpaceObject spaceObject = new DARTSpaceObject(this);
-                ConfigNode vesselNode = createVesselNode(spaceObject);
+                ConfigNode vesselNode = CreateVesselNode(spaceObject);
                 spaceObjects.Add(spaceObject);
+                DARTSpaceObjectScenario.onSpaceObjectCreated.Fire(spaceObject);
             }
         }
         #endregion
@@ -243,7 +244,7 @@ namespace DART.SpaceObjects
         /// </summary>
         /// <param name="spaceObject">A DARTSpaceObject to base the new vessel on.</param>
         /// <returns>A ConfigNode containing the new vessel data.</returns>
-        public virtual ConfigNode createVesselNode(DARTSpaceObject spaceObject)
+        public virtual ConfigNode CreateVesselNode(DARTSpaceObject spaceObject)
         {
             // Generate vessel name
             if (string.IsNullOrEmpty(vesselName))
