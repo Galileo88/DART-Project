@@ -7,7 +7,7 @@
     <ProjectGuid>{07D2DFBF-1289-4150-B799-F23A05A5B3E2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpaceObjectSpawner</RootNamespace>
+    <RootNamespace>DART.SpaceObjects</RootNamespace>
     <AssemblyName>SpaceObjectSpawner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -51,9 +51,15 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\..\..\KSPDev\KSP_x64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\KSPDev\KSP_x64_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DARTCollisionReport.cs" />
     <Compile Include="DARTSpaceObjectScenario.cs" />
+    <Compile Include="ModuleImpactMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ModuleCustomAsteroid.cs" />
     <Compile Include="DARTSpaceObject.cs" />
