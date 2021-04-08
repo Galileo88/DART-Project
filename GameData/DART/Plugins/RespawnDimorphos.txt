@@ -1,0 +1,9 @@
+// How to reset and respawn Dimorphos:
+// Simply rename this file from .txt to .cfg
+// Then restart KSP and either load your test save or create a new one.
+// Every time that you go to the Space Center, Dimorphos will be recreated.
+// To stop that from happening, exit KSP and rename this file from .cfg to .txt
+DART_SPACEOBJECT_SETTINGS
+{
+	recreateObjectsOnStart = true
+}
