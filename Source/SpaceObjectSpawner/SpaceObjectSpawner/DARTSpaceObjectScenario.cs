@@ -31,6 +31,11 @@ namespace DART.SpaceObjects
         /// Signifies that we have created a new space object
         /// </summary>
         public static EventData<DARTSpaceObject> onSpaceObjectCreated = new EventData<DARTSpaceObject>("onSpaceObjectCreated");
+
+        /// <summary>
+        /// Signifies that we have collided with something.
+        /// </summary>
+        public static EventData<DARTCollisionReport> onCollidedWithObject = new EventData<DARTCollisionReport>("onCollidedWithObject");
         #endregion
 
         #region Housekeeping
