@@ -24,7 +24,7 @@ namespace DART.SpaceObjects
         /// </summary>
         [KSPField(isPersistant = true, guiName = "Is tidally locked")]
         [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
-        public bool isTitallyLocked = false;
+        public bool isTitallyLocked = true;
 
         /// <summary>
         /// In seconds, the amount of time it takes to make a full revolution along the roll (x), pitch (y) and yaw (z) axis.
