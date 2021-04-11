@@ -63,7 +63,7 @@ namespace DART.SpaceObjects
                 collisionReport.collisionVelocity = collision.relativeVelocity.magnitude;
                 collisionReport.collidedWithVesselMass = collidedPart.vessel.GetTotalMass();
                 collisionReport.collidedWithMomentum = collisionReport.collidedWithVesselMass * collisionReport.collisionVelocity;
-                collisionReport.originatorMomentum = part.vessel.GetTotalMass() * collisionReport.collisionVelocity;
+                collisionReport.originatorMomentum = vessel.GetTotalMass() * collisionReport.collisionVelocity;
 
                 DARTSpaceObjectScenario.onCollidedWithObject.Fire(collisionReport);
             }
@@ -75,7 +75,7 @@ namespace DART.SpaceObjects
                 collisionReport.originator = part;
                 collisionReport.collidedWithGameObject = collision.collider.gameObject;
                 collisionReport.collisionVelocity = collision.relativeVelocity.magnitude;
-                collisionReport.originatorMomentum = part.vessel.GetTotalMass() * collisionReport.collisionVelocity;
+                collisionReport.originatorMomentum = vessel.GetTotalMass() * collisionReport.collisionVelocity;
 
                 DARTSpaceObjectScenario.onCollidedWithObject.Fire(collisionReport);
             }
