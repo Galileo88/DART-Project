@@ -53,8 +53,8 @@ namespace DART.SpaceObjects
                 return;
 
             // Determine unfocused range
-            part.vessel.UpdateVesselSize();
-            float unfocusedRange = part.vessel.vesselSize.magnitude;
+            vessel.UpdateVesselSize();
+            float unfocusedRange = vessel.vesselSize.magnitude;
             Events["RenameAsteroidEvent"].unfocusedRange = unfocusedRange;
             Events["RunExperiment"].unfocusedRange = unfocusedRange;
             Events["TargetCoM"].unfocusedRange = unfocusedRange;
@@ -96,12 +96,12 @@ namespace DART.SpaceObjects
             string message = string.Empty;
 
             // Make sure the experitment is usable.
-            if (!ScienceUtil.RequiredUsageExternalAvailable(part.vessel, FlightGlobals.ActiveVessel, (ExperimentUsageReqs)experimentUsageMask, scienceExperiment, ref message))
+            if (!ScienceUtil.RequiredUsageExternalAvailable(vessel, FlightGlobals.ActiveVessel, (ExperimentUsageReqs)experimentUsageMask, scienceExperiment, ref message))
                 return;
 
             // Make sure the situation is valid.
             ExperimentSituations experimentSituation = ScienceUtil.GetExperimentSituation(this.vessel);
-            if (!scienceExperiment.IsAvailableWhile(experimentSituation, part.vessel.mainBody))
+            if (!scienceExperiment.IsAvailableWhile(experimentSituation, vessel.mainBody))
                 return;
 
             // Get the biome name and biome display name.
@@ -109,22 +109,22 @@ namespace DART.SpaceObjects
             string biomeDisplayName = string.Empty;
             if (scienceExperiment.BiomeIsRelevantWhile(experimentSituation))
             {
-                if (!string.IsNullOrEmpty(part.vessel.landedAt))
+                if (!string.IsNullOrEmpty(vessel.landedAt))
                 {
-                    biomeName = Vessel.GetLandedAtString(part.vessel.landedAt);
-                    biomeDisplayName = Localizer.Format(part.vessel.displaylandedAt);
+                    biomeName = Vessel.GetLandedAtString(vessel.landedAt);
+                    biomeDisplayName = Localizer.Format(vessel.displaylandedAt);
                 }
                 else
                 {
-                    biomeName = ScienceUtil.GetExperimentBiome(part.vessel.mainBody, part.vessel.latitude, this.vessel.longitude);
-                    biomeDisplayName = ScienceUtil.GetBiomedisplayName(part.vessel.mainBody, biomeName);
+                    biomeName = ScienceUtil.GetExperimentBiome(vessel.mainBody, vessel.latitude, this.vessel.longitude);
+                    biomeDisplayName = ScienceUtil.GetBiomedisplayName(vessel.mainBody, biomeName);
                 }
                 if (string.IsNullOrEmpty(biomeDisplayName))
                     biomeDisplayName = biomeName;
             }
 
             // Run the experiment. If we can't then hide the event.
-            ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(scienceExperiment, ScienceUtil.GetExperimentSituation(part.vessel), part.vessel.mainBody, biomeName, biomeDisplayName);
+            ScienceSubject subject = ResearchAndDevelopment.GetExperimentSubject(scienceExperiment, ScienceUtil.GetExperimentSituation(vessel), vessel.mainBody, biomeName, biomeDisplayName);
             if (subject == null)
             {
                 // Something went wrong so hide the event.

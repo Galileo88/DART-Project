@@ -60,6 +60,7 @@
     <Compile Include="DARTCollisionReport.cs" />
     <Compile Include="DARTSpaceObjectScenario.cs" />
     <Compile Include="ModuleImpactMonitor.cs" />
+    <Compile Include="ModulePersistedRotation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ModuleCustomAsteroid.cs" />
     <Compile Include="DARTSpaceObject.cs" />
