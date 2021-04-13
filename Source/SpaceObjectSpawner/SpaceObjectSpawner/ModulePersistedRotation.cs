@@ -46,6 +46,8 @@ namespace DART.SpaceObjects
         [KSPField(isPersistant = true, guiUnits = "rad/s", guiFormat = "n4")]
         public Vector3 angularVelocity;
 
+        [KSPField(guiName = "Tidal Lock (Experimental)")]
+        [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
         bool enableTidalLock = false;
         #endregion
 
@@ -122,6 +124,8 @@ namespace DART.SpaceObjects
 
             // Debug fields
             Fields["angularVelocity"].guiActive = debugMode;
+            Fields["debugRotationDisplay"].guiActive = debugMode;
+            Fields["enableTidalLock"].guiActive = debugMode;
             Events["AddInitialSpin"].guiActive = debugMode;
 
             // Calculate the rotational period in radians per second.

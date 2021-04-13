@@ -30,6 +30,7 @@ namespace DART.SpaceObjects
         const string kSizeClass = "sizeClass";
         const string kIsKnown = "isKnown";
         const string kVesselName = "vesselName";
+        const string kVesselType = "vesselType";
         #endregion
 
         #region Fields
@@ -89,6 +90,11 @@ namespace DART.SpaceObjects
         /// Flag to indicate whether or not the space object is automatically tracked by the Tracking Station.
         /// </summary>
         public bool isKnown = false;
+
+        /// <summary>
+        /// Type of vessel to create.
+        /// </summary>
+        public VesselType vesselType = VesselType.SpaceObject;
         #endregion
 
         #region Housekeeping
@@ -145,6 +151,7 @@ namespace DART.SpaceObjects
             maxInstances = copyFrom.maxInstances;
             vesselId = copyFrom.vesselId;
             isKnown = copyFrom.isKnown;
+            vesselType = copyFrom.vesselType;
 
             lastSeed = UnityEngine.Random.Range(0, int.MaxValue);
             UnityEngine.Random.InitState(lastSeed);
@@ -189,6 +196,9 @@ namespace DART.SpaceObjects
 
             if (node.HasValue(kIsKnown))
                 bool.TryParse(node.GetValue(kIsKnown), out spaceObject.isKnown);
+
+            if (node.HasValue(kVesselType))
+                vesselType = (VesselType)Enum.Parse(typeof(VesselType), node.GetValue(kVesselType));
         }
 
         /// <summary>
@@ -210,6 +220,7 @@ namespace DART.SpaceObjects
             node.AddValue(kInclination, orbitInclination.ToString());
             node.AddValue(kMaxInstances, maxInstances.ToString());
             node.AddValue(kVesselId, vesselId);
+            node.AddValue(kVesselType, vesselType.ToString());
 
             return node;
         }
@@ -276,7 +287,7 @@ namespace DART.SpaceObjects
             ConfigNode[] additionalNodes = new ConfigNode[] { new ConfigNode("ACTIONGROUPS"), discoveryNode };
 
             // Create vessel node
-            ConfigNode vesselNode = ProtoVessel.CreateVesselNode(vesselName, VesselType.SpaceObject, orbit, 0, new ConfigNode[] { partNode }, additionalNodes);
+            ConfigNode vesselNode = ProtoVessel.CreateVesselNode(vesselName, vesselType, orbit, 0, new ConfigNode[] { partNode }, additionalNodes);
 
             // Add vessel node to the game.
             ProtoVessel protoVessel = HighLogic.CurrentGame.AddVessel(vesselNode);
