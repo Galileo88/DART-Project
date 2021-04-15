@@ -45,10 +45,6 @@ namespace DART.SpaceObjects
         /// </summary>
         [KSPField(isPersistant = true, guiUnits = "rad/s", guiFormat = "n4")]
         public Vector3 angularVelocity;
-
-        [KSPField(guiName = "Tidal Lock (Experimental)")]
-        [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
-        bool enableTidalLock = true;
         #endregion
 
         #region Housekeeping
@@ -69,13 +65,6 @@ namespace DART.SpaceObjects
                 vessel.situation == Vessel.Situations.SPLASHED
                 )
                 return;
-
-            if (enableTidalLock && vessel.Parts.Count == 1)
-            {
-                Vector3 planetUp = (vessel.rootPart.transform.position - vessel.mainBody.position).normalized;
-                vessel.SetRotation(Quaternion.FromToRotation(vessel.GetTransform().up, planetUp) * vessel.transform.rotation, true);
-                return;
-            }
 
             if (TimeWarp.CurrentRateIndex == 0 && !vessel.packed)
             {
@@ -125,7 +114,6 @@ namespace DART.SpaceObjects
             // Debug fields
             Fields["angularVelocity"].guiActive = debugMode;
             Fields["debugRotationDisplay"].guiActive = debugMode;
-            Fields["enableTidalLock"].guiActive = debugMode;
             Events["AddInitialSpin"].guiActive = debugMode;
 
             // Calculate the rotational period in radians per second.
