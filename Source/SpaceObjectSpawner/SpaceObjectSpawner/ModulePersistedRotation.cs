@@ -48,7 +48,7 @@ namespace DART.SpaceObjects
 
         [KSPField(guiName = "Tidal Lock (Experimental)")]
         [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
-        bool enableTidalLock = false;
+        bool enableTidalLock = true;
         #endregion
 
         #region Housekeeping
@@ -70,7 +70,7 @@ namespace DART.SpaceObjects
                 )
                 return;
 
-            if (enableTidalLock)
+            if (enableTidalLock && vessel.Parts.Count == 1)
             {
                 Vector3 planetUp = (vessel.rootPart.transform.position - vessel.mainBody.position).normalized;
                 vessel.SetRotation(Quaternion.FromToRotation(vessel.GetTransform().up, planetUp) * vessel.transform.rotation, true);
