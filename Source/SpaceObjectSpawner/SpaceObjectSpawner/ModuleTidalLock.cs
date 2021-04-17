@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace DART.SpaceObjects
 {
+    /// <summary>
+    /// This is a simple helper class to keep objects tidally locked around a celestial body. It's designed for single-part vessels; vessels with more than one part won't be tidally locked.
+    /// </summary>
     public class ModuleTidalLock: PartModule
     {
         /// <summary>
@@ -15,27 +18,18 @@ namespace DART.SpaceObjects
         [KSPField()]
         public bool debugMode = false;
 
+        /// <summary>
+        /// Flag to determine whether or not to enable tidal lock.
+        /// </summary>
         [KSPField(guiName = "Tidal Lock (Experimental)")]
         [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
         bool enableTidalLock = true;
 
         /// <summary>
-        /// Current angular momentum.
+        /// Amount of force that it takes to break tidal lock.
         /// </summary>
-        [KSPField(guiName = "Current Ang. Mom.", guiUnits = "Nm/s", guiFormat = "n4", guiActive = true)]
-        public Vector3 currentAngularMomentum;
-
-        [KSPField(guiName = "Current Mom. Mag.", guiUnits = "Nm/s", guiFormat = "n4", guiActive = true)]
-        public float momentumMagnitude;
-
-        /// <summary>
-        /// Post-collision angular momentum.
-        /// </summary>
-        [KSPField(guiName = "Collision Ang. Mom.", guiUnits = "Nm/s", guiFormat = "n4", guiActive = true)]
-        public Vector3 collideAngularMomentum;
-
-        [KSPField(guiName = "Collision Mom. Mag.", guiUnits = "Nm/s", guiFormat = "n4", guiActive = true)]
-        public float collisionMomentumMagnitude;
+        [KSPField]
+        public double tidalLockBreakForce = 1;
 
         public override void OnAwake()
         {
@@ -80,15 +74,14 @@ namespace DART.SpaceObjects
                 Vector3 planetUp = (vessel.rootPart.transform.position - vessel.mainBody.position).normalized;
                 vessel.SetRotation(Quaternion.FromToRotation(vessel.GetTransform().up, planetUp) * vessel.transform.rotation, true);
             }
-
-            currentAngularMomentum = vessel.angularMomentum;
-            momentumMagnitude = currentAngularMomentum.magnitude;
         }
 
         void onCollidedWithObject(DARTCollisionReport collisionReport)
         {
-            collideAngularMomentum = vessel.angularMomentum;
-            collisionMomentumMagnitude = collideAngularMomentum.magnitude;
+            // Abs(angularVelocity.magnitude / orbitalVelocity.magnitude - 1) > tidalLockBreakForce ?
+            double currentForce = Math.Abs(vessel.angularVelocity.magnitude / vessel.orbit.vel.magnitude - 1 );
+            if (currentForce > tidalLockBreakForce)
+                enableTidalLock = false;
         }
     }
 }
