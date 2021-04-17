@@ -21,9 +21,39 @@ namespace DART.SpaceObjects
         /// <summary>
         /// Flag to determine whether or not to enable tidal lock.
         /// </summary>
-        [KSPField(guiName = "Tidal Lock (Experimental)")]
+        [KSPField(guiName = "Tidal Lock (Experimental)", isPersistant = true)]
         [UI_Toggle(enabledText = "Enabled", disabledText = "Disabled")]
         bool enableTidalLock = true;
+
+        /// <summary>
+        /// Post-collision angular velocity
+        /// </summary>
+        [KSPField(guiName = "Post-collision ang. vel.", guiUnits = "rad/sec", guiFormat = "n4")]
+        Vector3 collisionAngularVelocity;
+
+        /// <summary>
+        /// Post-collision angular velocity magnitude
+        /// </summary>
+        [KSPField(guiName = "Post-coll. ang. vel. mag.", guiUnits = "rad/sec", guiFormat = "n4")]
+        double collisionAngularVelocityMagnitude;
+
+        /// <summary>
+        /// Post-collision orbital velocity
+        /// </summary>
+        [KSPField(guiName = "Post-collision obt. vel.", guiUnits = "rad/sec", guiFormat = "n4")]
+        Vector3 collisionOrbitVelocity;
+
+        /// <summary>
+        /// Post-collision orbital velocity magnitude
+        /// </summary>
+        [KSPField(guiName = "Post-coll. obt. vel. mag.", guiUnits = "rad/sec", guiFormat = "n4")]
+        double collisionOrbitVelocityMagnitude;
+
+        /// <summary>
+        /// Collision force
+        /// </summary>
+        [KSPField(guiName = "Collision force", guiFormat = "n4")]
+        double collisionForce;
 
         /// <summary>
         /// Amount of force that it takes to break tidal lock.
@@ -54,6 +84,11 @@ namespace DART.SpaceObjects
 
             // Debug fields
             Fields["enableTidalLock"].guiActive = debugMode;
+            Fields["collisionAngularVelocity"].guiActive = debugMode;
+            Fields["collisionAngularVelocityMagnitude"].guiActive = debugMode;
+            Fields["collisionOrbitVelocity"].guiActive = debugMode;
+            Fields["collisionOrbitVelocityMagnitude"].guiActive = debugMode;
+            Fields["collisionForce"].guiActive = debugMode;
         }
 
 
@@ -79,8 +114,14 @@ namespace DART.SpaceObjects
         void onCollidedWithObject(DARTCollisionReport collisionReport)
         {
             // Abs(angularVelocity.magnitude / orbitalVelocity.magnitude - 1) > tidalLockBreakForce ?
-            double currentForce = Math.Abs(vessel.angularVelocity.magnitude / vessel.orbit.vel.magnitude - 1 );
-            if (currentForce > tidalLockBreakForce)
+            collisionAngularVelocity = vessel.angularVelocity;
+            collisionAngularVelocityMagnitude = vessel.angularVelocity.magnitude;
+
+            collisionOrbitVelocity = vessel.orbit.vel;
+            collisionOrbitVelocityMagnitude = vessel.orbit.vel.magnitude;
+
+            collisionForce = Math.Abs(collisionAngularVelocityMagnitude / collisionOrbitVelocityMagnitude - 1 );
+            if (collisionForce > tidalLockBreakForce)
                 enableTidalLock = false;
         }
     }
