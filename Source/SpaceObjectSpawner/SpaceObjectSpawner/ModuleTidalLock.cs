@@ -28,26 +28,20 @@ namespace DART.SpaceObjects
         /// <summary>
         /// Post-collision angular velocity
         /// </summary>
-        [KSPField(guiName = "Post-collision ang. vel.", guiUnits = "rad/sec", guiFormat = "n4")]
+        [KSPField(guiName = "Post-collision ang. vel.", guiUnits = "rad/sec", guiFormat = "n7")]
         Vector3 collisionAngularVelocity;
 
         /// <summary>
         /// Post-collision angular velocity magnitude
         /// </summary>
-        [KSPField(guiName = "Post-coll. ang. vel. mag.", guiUnits = "rad/sec", guiFormat = "n4")]
+        [KSPField(guiName = "Post-coll. ang. vel. mag.", guiUnits = "rad/sec", guiFormat = "n7")]
         double collisionAngularVelocityMagnitude;
 
         /// <summary>
-        /// Post-collision orbital velocity
+        /// Post-collision orbital period
         /// </summary>
-        [KSPField(guiName = "Post-collision obt. vel.", guiUnits = "rad/sec", guiFormat = "n4")]
-        Vector3 collisionOrbitVelocity;
-
-        /// <summary>
-        /// Post-collision orbital velocity magnitude
-        /// </summary>
-        [KSPField(guiName = "Post-coll. obt. vel. mag.", guiUnits = "rad/sec", guiFormat = "n4")]
-        double collisionOrbitVelocityMagnitude;
+        [KSPField(guiName = "Post-coll. obt. period", guiUnits = "sec", guiFormat = "n7")]
+        double orbitPeriod;
 
         /// <summary>
         /// Collision force
@@ -86,8 +80,7 @@ namespace DART.SpaceObjects
             Fields["enableTidalLock"].guiActive = debugMode;
             Fields["collisionAngularVelocity"].guiActive = debugMode;
             Fields["collisionAngularVelocityMagnitude"].guiActive = debugMode;
-            Fields["collisionOrbitVelocity"].guiActive = debugMode;
-            Fields["collisionOrbitVelocityMagnitude"].guiActive = debugMode;
+            Fields["orbitPeriod"].guiActive = debugMode;
             Fields["collisionForce"].guiActive = debugMode;
         }
 
@@ -113,14 +106,13 @@ namespace DART.SpaceObjects
 
         void onCollidedWithObject(DARTCollisionReport collisionReport)
         {
-            // Abs(angularVelocity.magnitude / orbitalVelocity.magnitude - 1) > tidalLockBreakForce ?
+            // Abs(angularVelocity.magnitude / (2 * pi / orbitalPeriod) - 1)
             collisionAngularVelocity = vessel.angularVelocity;
             collisionAngularVelocityMagnitude = vessel.angularVelocity.magnitude;
 
-            collisionOrbitVelocity = vessel.orbit.vel;
-            collisionOrbitVelocityMagnitude = vessel.orbit.vel.magnitude;
+            orbitPeriod = vessel.orbit.period;
 
-            collisionForce = Math.Abs(collisionAngularVelocityMagnitude / collisionOrbitVelocityMagnitude - 1 );
+            collisionForce = Math.Abs(collisionAngularVelocityMagnitude / ( 2 * Math.PI / vessel.orbit.period) - 1 );
             if (collisionForce > tidalLockBreakForce)
                 enableTidalLock = false;
         }
