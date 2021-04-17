@@ -53,7 +53,7 @@ namespace DART.SpaceObjects
         /// Amount of force that it takes to break tidal lock.
         /// </summary>
         [KSPField]
-        public double tidalLockBreakForce = 1;
+        public double tidalLockBreakRatio = 1;
 
         public override void OnAwake()
         {
@@ -113,7 +113,7 @@ namespace DART.SpaceObjects
             orbitPeriod = vessel.orbit.period;
 
             collisionForce = Math.Abs(collisionAngularVelocityMagnitude / ( 2 * Math.PI / vessel.orbit.period) - 1 );
-            if (collisionForce > tidalLockBreakForce)
+            if (collisionForce > tidalLockBreakRatio)
                 enableTidalLock = false;
         }
     }
