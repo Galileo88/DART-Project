@@ -64,7 +64,7 @@ namespace Kopernicus.Components.ModularScatter
                     return;
                 }
 
-                Debug.LogWarning("[Kopernicus] Discard old lights");
+                Debug.LogWarning("[DART] Discard old lights");
                 foreach (Light light in _lights.Where(l => l))
                 {
                     UnityEngine.Object.Destroy(light.gameObject);
@@ -77,13 +77,13 @@ namespace Kopernicus.Components.ModularScatter
             Boolean rebuild = false;
             if (system.scatterObjects.Count > _lights.Count)
             {
-                Debug.LogWarning("[Kopernicus] Add " + (system.scatterObjects.Count - _lights.Count) +
+                Debug.LogWarning("[DART] Add " + (system.scatterObjects.Count - _lights.Count) +
                                  " lights");
                 rebuild = true;
             }
             else if (system.scatterObjects.Count < _lights.Count)
             {
-                Debug.LogWarning("[Kopernicus] Remove " + (_lights.Count - system.scatterObjects.Count) +
+                Debug.LogWarning("[DART] Remove " + (_lights.Count - system.scatterObjects.Count) +
                                  " lights");
                 rebuild = true;
             }

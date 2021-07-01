@@ -514,7 +514,7 @@ namespace Kopernicus.Components
 
 
         /// <summary>
-        /// Returns the host star directly from the given body.
+        /// Returns the host star cb directly from the given body.
         /// </summary>
         public static CelestialBody GetLocalStar(CelestialBody body)
         {

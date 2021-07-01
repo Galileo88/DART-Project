@@ -151,14 +151,14 @@ namespace Kopernicus.Components
 
             if (_ksc == null)
             {
-                Debug.LogError("[Kopernicus] KSC: Unable to find homeworld body with PQSCity named KSC");
+                Debug.LogError("[DART] KSC: Unable to find homeworld body with PQSCity named KSC");
                 return;
             }
 
             if (_mapDecal == null)
             {
                 Debug.LogError(
-                    "[Kopernicus] KSC: Unable to find homeworld body with PQSMod_MapDecalTangent named KSC");
+                    "[DART] KSC: Unable to find homeworld body with PQSMod_MapDecalTangent named KSC");
                 return;
             }
 
@@ -314,7 +314,7 @@ namespace Kopernicus.Components
             }
             else
             {
-                Debug.Log("[Kopernicus]: KSC: No SpaceCenter instance!");
+                Debug.Log("[DART]: KSC: No SpaceCenter instance!");
             }
 
             // Add a material fixer

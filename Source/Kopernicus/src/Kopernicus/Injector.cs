@@ -46,7 +46,7 @@ namespace Kopernicus
 
         // The checksum of the System.cfg file.
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        //private const String CONFIG_CHECKSUM = "73eb1037678bc520a0fe2e89768e0549b36f17a9cac7136af6e3e6b7a0ccf9b9";
+        private const String CONFIG_CHECKSUM = "1df69d7dbc3bcf60f1f4ff04387e30057e793d27b75086b3fce59eb8c936f596";
 
         // Backup of the old system prefab, in case someone deletes planet templates we need at Runtime (Kittopia)
         public static PSystem StockSystemPrefab { get; private set; }
@@ -64,10 +64,10 @@ namespace Kopernicus
                 String supported = CompatibilityChecker.VERSION_MAJOR + "." + CompatibilityChecker.VERSION_MINOR + "." +
                                    CompatibilityChecker.REVISION;
                 String current = Versioning.version_major + "." + Versioning.version_minor + "." + Versioning.Revision;
-                Debug.LogWarning("[Kopernicus] Detected incompatible install.\nCurrent version of KSP: " + current +
+                Debug.LogWarning("[DART] Detected incompatible install.\nCurrent version of KSP: " + current +
                                  ".\nSupported version of KSP: " + supported +
                                  ".\nPlease wait, until Kopernicus gets updated to match your version of KSP.");
-                Debug.Log("[Kopernicus] Aborting...");
+                Debug.Log("[DART] Aborting...");
 
                 // Abort
                 Destroy(this);
@@ -80,7 +80,7 @@ namespace Kopernicus
                                        "-" + CompatibilityChecker.KOPERNICUS;
             String kspVersion = Versioning.version_major + "." + Versioning.version_minor + "." +
                                 Versioning.Revision;
-            Debug.Log("[Kopernicus] Running Kopernicus " + kopernicusVersion + " on KSP " + kspVersion);
+            Debug.Log("[DART] Running Kopernicus " + kopernicusVersion + " on KSP " + kspVersion);
 
             // Wrap this in a try - catch block so we can display a warning if Kopernicus fails to load for some reason
             try
@@ -108,7 +108,7 @@ namespace Kopernicus
                 }
 
                 // Was the system template modified?
-                /*#if !DEBUG
+                #if !DEBUG
                 String systemCfgPath = KSPUtil.ApplicationRootPath + "GameData/DART/Config/System.cfg";
                 if (File.Exists(systemCfgPath))
                 {
@@ -123,7 +123,7 @@ namespace Kopernicus
                             "The file 'DART/Config/System.cfg' was modified directly without ModuleManager");
                     }
                 }
-                #endif*/
+                #endif
 
                 // Backup the old prefab
                 StockSystemPrefab = PSystemManager.Instance.systemPrefab;
@@ -173,7 +173,7 @@ namespace Kopernicus
             try
             {
                 // Log
-                Debug.Log("[Kopernicus]: Post-Spawn");
+                Debug.Log("[DART]: Post-Spawn");
 
                 // Fire Event
                 Events.OnPreFixing.Fire();
@@ -234,10 +234,28 @@ namespace Kopernicus
                             renderer.enabled = false;
                         }
 
+                        foreach (Collider collider in body.scaledBody.GetComponentsInChildren<Collider>(true))
+                        {
+                            collider.enabled = false;
+                        }
+
                         foreach (ScaledSpaceFader fader in body.scaledBody.GetComponentsInChildren<ScaledSpaceFader>(
                             true))
                         {
                             fader.enabled = false;
+                        }
+                    }
+                    else
+                    {
+                        foreach (Renderer renderer in body.scaledBody.GetComponentsInChildren<Renderer>(true))
+                        {
+                            if (renderer.enabled)
+                            {
+                                foreach (Collider collider in body.scaledBody.GetComponentsInChildren<Collider>(true))
+                                {
+                                    collider.enabled = false;
+                                }
+                            }
                         }
                     }
 
@@ -266,18 +284,18 @@ namespace Kopernicus
                             }
                             else
                             {
-                                Debug.Log("[Kopernicus]: Body " + body.name + " has no Orbit driver!");
+                                Debug.Log("[DART]: Body " + body.name + " has no Orbit driver!");
                             }
                         }
                     }
                     else
                     {
-                        Debug.Log("[Kopernicus]: Root body children null or 0");
+                        Debug.Log("[DART]: Root body children null or 0");
                     }
                 }
                 else
                 {
-                    Debug.Log("[Kopernicus]: Root body null!");
+                    Debug.Log("[DART]: Root body null!");
                 }
 
                 if (Templates.MaxViewDistance >= 0)
@@ -318,7 +336,7 @@ namespace Kopernicus
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "KopernicusFail", "Warning",
                 "Kopernicus was not able to load the custom planetary system due to an exception in the loading process.\n" +
                 "Loading your saved game is NOT recommended, because the missing planets could corrupt it and delete your progress.\n\n" +
-                "Please contact the planet pack author or the Kopernicus team about the issue and send them a valid bug report, including your KSP.log, your ModuleManager.ConfigCache file and the folder Logs/Kopernicus/ from your KSP root directory.\n\n",
+                "Please contact the planet pack author or the Kopernicus team about the issue and send them a valid bug report, including your KSP.log, your ModuleManager.ConfigCache file and the folder Logs/DART/ from your KSP root directory.\n\n",
                 "OK", true, UISkinManager.GetSkin("MainMenuSkin"));
         }
 

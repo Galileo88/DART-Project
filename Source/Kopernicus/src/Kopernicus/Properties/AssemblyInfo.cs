@@ -15,5 +15,5 @@ using Kopernicus.RuntimeUtility;
 [assembly: AssemblyVersion("1.0.0")]
 
 [assembly: LogAggregator("GameData/ModuleManager.ConfigCache")]
-[assembly: LogAggregator("Logs/Kopernicus/")]
+[assembly: LogAggregator("Logs/DART/")]
 [assembly: LogAggregator("KSP.log")]

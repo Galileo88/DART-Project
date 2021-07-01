@@ -45,7 +45,7 @@ namespace Kopernicus.RuntimeUtility
             MainMenu main = FindObjectOfType<MainMenu>();
             if (main == null)
             {
-                Debug.LogError("[Kopernicus] No main menu object!");
+                Debug.LogError("[DART] No main menu object!");
                 return;
             }
             MainMenuEnvLogic logic = main.envLogic;
@@ -53,7 +53,7 @@ namespace Kopernicus.RuntimeUtility
             // Set it to Space, because the Mun-Area won't work with sth else than Mun
             if (logic.areas.Length < 2)
             {
-                Debug.LogError("[Kopernicus] Not enough scenes");
+                Debug.LogError("[DART] Not enough scenes");
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace Kopernicus.RuntimeUtility
             }
             if (planetCb == null)
             {
-                Debug.LogError("[Kopernicus] Could not find home world!");
+                Debug.LogError("[DART] Could not find home world!");
                 return;
             }
 
@@ -97,7 +97,7 @@ namespace Kopernicus.RuntimeUtility
             MainMenu main = FindObjectOfType<MainMenu>();
             if (main == null)
             {
-                Debug.LogError("[Kopernicus] No main menu object!");
+                Debug.LogError("[DART] No main menu object!");
                 return;
             }
             MainMenuEnvLogic logic = main.envLogic;
@@ -105,7 +105,7 @@ namespace Kopernicus.RuntimeUtility
             // Set it to Space, because the Mun-Area won't work with sth else than Mun
             if (logic.areas.Length < 2)
             {
-                Debug.LogError("[Kopernicus] Not enough bodies");
+                Debug.LogError("[DART] Not enough bodies");
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace Kopernicus.RuntimeUtility
             Transform kerbin = space.transform.Find("Kerbin");
             if (kerbin == null)
             {
-                Debug.LogError("[Kopernicus] No Kerbin transform!");
+                Debug.LogError("[DART] No Kerbin transform!");
                 return;
             }
             kerbin.gameObject.SetActive(false);
@@ -125,7 +125,7 @@ namespace Kopernicus.RuntimeUtility
             Transform munPivot = space.transform.Find("MunPivot");
             if (munPivot == null)
             {
-                Debug.LogError("[Kopernicus] No MunPivot transform!");
+                Debug.LogError("[DART] No MunPivot transform!");
                 return;
             }
             munPivot.gameObject.SetActive(false);

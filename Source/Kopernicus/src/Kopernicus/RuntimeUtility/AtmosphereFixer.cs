@@ -53,7 +53,7 @@ namespace Kopernicus.RuntimeUtility
         {
             if (afg.planet == null)
             {
-                Debug.Log("[Kopernicus] Trying to store AFG, but planet null!");
+                Debug.Log("[DART] Trying to store AFG, but planet null!");
                 return;
             }
             Atmospheres[afg.planet.transform.name] = new AtmosphereInfo(afg);
@@ -167,7 +167,7 @@ namespace Kopernicus.RuntimeUtility
                 
                 if (AtmosphereInfo.PatchAfg(afg))
                 {
-                    Debug.Log("[Kopernicus] AtmosphereFixer => Patched AtmosphereFromGround for " +
+                    Debug.Log("[DART] AtmosphereFixer => Patched AtmosphereFromGround for " +
                               afg.planet.bodyName);
                 }
             }

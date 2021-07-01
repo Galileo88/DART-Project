@@ -264,7 +264,7 @@ namespace Kopernicus.OnDemand
             {
                 // Round it up to a 1MB multiple
                 _sizeWholeFile = (fileBytes + 0xFFFFF) & ~0xFFFFF;
-                Debug.Log("[Kopernicus] LoadWholeFile reallocating buffer to " + _sizeWholeFile);
+                Debug.Log("[DART] LoadWholeFile reallocating buffer to " + _sizeWholeFile);
                 _wholeFileBuffer = new Byte[_sizeWholeFile];
             }
             else
@@ -319,7 +319,7 @@ namespace Kopernicus.OnDemand
             {
                 // Round it up to a 1MB multiple
                 _sizeWholeFile = (fileBytes + 0xFFFFF) & ~0xFFFFF;
-                Debug.Log("[Kopernicus] LoadRestOfReader reallocating buffer to " + _sizeWholeFile);
+                Debug.Log("[DART] LoadRestOfReader reallocating buffer to " + _sizeWholeFile);
                 _wholeFileBuffer = new Byte[_sizeWholeFile];
             }
             else
@@ -363,7 +363,7 @@ namespace Kopernicus.OnDemand
                 }
 
                 _arrayLengthOffset = *p == 3 ? offset : 1;
-                Debug.Log("[Kopernicus] CalculateArrayLengthOffset using offset of " + _arrayLengthOffset);
+                Debug.Log("[DART] CalculateArrayLengthOffset using offset of " + _arrayLengthOffset);
             }
         }
 
@@ -448,19 +448,19 @@ namespace Kopernicus.OnDemand
                                 }
                                 else if (ddsHeader.ddspf.dwFourCC == DDSValues.uintDXT2)
                                 {
-                                    Debug.Log("[Kopernicus]: DXT2 not supported" + path);
+                                    Debug.Log("[DART]: DXT2 not supported" + path);
                                 }
                                 else if (ddsHeader.ddspf.dwFourCC == DDSValues.uintDXT4)
                                 {
-                                    Debug.Log("[Kopernicus]: DXT4 not supported: " + path);
+                                    Debug.Log("[DART]: DXT4 not supported: " + path);
                                 }
                                 else if (ddsHeader.ddspf.dwFourCC == DDSValues.uintDX10)
                                 {
-                                    Debug.Log("[Kopernicus]: DX10 dds not supported: " + path);
+                                    Debug.Log("[DART]: DX10 dds not supported: " + path);
                                 }
                                 else if (ddsHeader.ddspf.dwFourCC == DDSValues.uintMagic)
                                 {
-                                    Debug.Log("[Kopernicus]: Magic dds not supported: " + path);
+                                    Debug.Log("[DART]: Magic dds not supported: " + path);
                                 }
                                 else
                                 {
@@ -567,7 +567,7 @@ namespace Kopernicus.OnDemand
                                 if (error)
                                 {
                                     Debug.Log(
-                                        "[Kopernicus]: Only DXT1, DXT5, A8, R8, R16, RGB24, RGBA32, RGB565, ARGB4444, RGBA4444, 4bpp palette and 8bpp palette are supported");
+                                        "[DART]: Only DXT1, DXT5, A8, R8, R16, RGB24, RGBA32, RGB565, ARGB4444, RGBA4444, 4bpp palette and 8bpp palette are supported");
                                 }
 
                                 if (ok)
@@ -581,7 +581,7 @@ namespace Kopernicus.OnDemand
                         }
                         else
                         {
-                            Debug.Log("[Kopernicus]: Bad DDS header.");
+                            Debug.Log("[DART]: Bad DDS header.");
                         }
                     }
                     else
@@ -599,12 +599,12 @@ namespace Kopernicus.OnDemand
                 catch (Exception ex)
                 {
                     uncaught = false;
-                    Debug.Log("[Kopernicus]: failed to load " + path + " with exception " + ex.Message);
+                    Debug.Log("[DART]: failed to load " + path + " with exception " + ex.Message);
                 }
 
                 if (map == null && uncaught)
                 {
-                    Debug.Log("[Kopernicus]: failed to load " + path);
+                    Debug.Log("[DART]: failed to load " + path);
                 }
                 else
                 {
@@ -623,7 +623,7 @@ namespace Kopernicus.OnDemand
             }
             else
             {
-                Debug.Log("[Kopernicus]: texture does not exist! " + path);
+                Debug.Log("[DART]: texture does not exist! " + path);
             }
 
             return map;

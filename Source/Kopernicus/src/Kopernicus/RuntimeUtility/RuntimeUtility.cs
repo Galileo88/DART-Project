@@ -68,7 +68,19 @@ namespace Kopernicus.RuntimeUtility
                 return pluginPath;
             }
         }
-        public static int physicsCorrectionCounter = 0;
+        private static int collisionCheckCounter = 0;
+        private static int collisionCheckCounterCheckRate = 500;
+        private static bool impactedDimorphos = false;
+        private static bool setupDimorphos = false;
+        private static double smaDimorphos = 0;
+        private static double eccDimorphos = 0;
+        private static double incDimorphos = 0;
+        private static double perDimorphos = 0;
+        private static bool userSaidStopTrackingDimorphos = false;
+        private static PopupDialog dialogDimorphos = null;
+        private static Vessel vesselDimorphos = null;
+        private static string t1 = "";
+        private static string t2 = "";
         public static GameScenes previousScene = GameScenes.MAINMENU;
         public static ConfigReader KopernicusConfig = new Kopernicus.Configuration.ConfigReader();
         // Awake() - flag this class as don't destroy on load and register delegates
@@ -88,7 +100,6 @@ namespace Kopernicus.RuntimeUtility
             KopernicusConfig.loadMainSettings();
             // Init the runtime logging
             new Logger("Kopernicus.Runtime", true).SetAsActive();
-
             // Add handlers
             GameEvents.OnMapEntered.Add(() => OnMapEntered());
             GameEvents.onLevelWasLoaded.Add(s => OnLevelWasLoaded(s));
@@ -100,7 +111,7 @@ namespace Kopernicus.RuntimeUtility
                 KbApp_PlanetParameters.CallbackAfterActivate += CallbackAfterActivate;
 
             // Log
-            Logger.Default.Log("[Kopernicus] RuntimeUtility Started");
+            Logger.Default.Log("[DART] RuntimeUtility Started");
             Logger.Default.Flush();
         }
 
@@ -160,35 +171,176 @@ namespace Kopernicus.RuntimeUtility
                 ApplyStarPatches(PSystemManager.Instance.localBodies[i]);
             }
         }
-
-        private void Update()
+        //Collision checker
+        private static void CollisionCheck()
         {
-            physicsCorrectionCounter++;
-            if (physicsCorrectionCounter > 60)
+            Vessel nearestVessel;
+            double nearestVesselDistance = Double.MaxValue;
+            List<Vessel> vessels = FlightGlobals.Vessels;
+            //Sample original orbital parameters of Dimorphos
+            if (!setupDimorphos)
             {
-                PatchColliders();
-                physicsCorrectionCounter = 0;
-            }
-        }
-
-        //Collision physics patcher
-        public static void PatchColliders()
-        {
-            if (HighLogic.LoadedSceneIsFlight && (CameraManager.GetCurrentCamera().cameraType == CameraType.Game))
-            {
-                if (FlightGlobals.ActiveVessel != null)
+                try
                 {
-                    CollisionEnhancer.bypass = false;
-                    CollisionEnhancer.UnderTerrainTolerance = 0;
-                    FlightGlobals.ActiveVessel.ResetCollisionIgnores();
-
+                    foreach (Vessel vessel in vessels)
+                    {
+                        if (vessel.vesselType.Equals(VesselType.SpaceObject) && vessel.vesselName.Contains("imorpho"))
+                        {
+                            vesselDimorphos = vessel;
+                        }
+                        continue;
+                    }
+                    smaDimorphos = vesselDimorphos.orbit.semiMajorAxis;
+                    eccDimorphos = vesselDimorphos.orbit.eccentricity;
+                    incDimorphos = vesselDimorphos.orbit.inclination;
+                    perDimorphos = vesselDimorphos.orbit.period;
+                    setupDimorphos = true;
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            foreach (Vessel vessel in vessels)
+            {
+                if (vessel.id.Equals(vesselDimorphos.id))
+                {
+                    continue;
+                }
+                if (vessel.mainBody.name.Equals("Didymos") && (!vessel.vesselType.Equals(VesselType.SpaceObject)))
+                {
+                    double testDistance = double.MaxValue;
+                    try
+                    {
+                        testDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
+                    }
+                    catch
+                    {
+                        testDistance = double.MaxValue;
+                    }
+                    if (testDistance < nearestVesselDistance)
+                    {
+                        nearestVessel = vessel;
+                        nearestVesselDistance = testDistance;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            //Sample current orbital parameters of Dimorphos
+            if (!impactedDimorphos)
+            {
+                if (!smaDimorphos.Equals(vesselDimorphos.orbit.semiMajorAxis))
+                {
+                    //IMPACT!!!
+                    impactedDimorphos = true;
+                }
+                if (!eccDimorphos.Equals(vesselDimorphos.orbit.eccentricity))
+                {
+                    //IMPACT!!!
+                    impactedDimorphos = true;
+                }
+                if (!incDimorphos.Equals(vesselDimorphos.orbit.inclination))
+                {
+                    //IMPACT!!!
+                    impactedDimorphos = true;
+                }
+                if (!perDimorphos.Equals(vesselDimorphos.orbit.period))
+                {
+                    //IMPACT!!!
+                    impactedDimorphos = true;
+                }
+                if (impactedDimorphos == true)
+                {
+                    //inform user
+                    dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                }
+            }
+            if (impactedDimorphos)
+            {
+                //Immediately begin posting/logging stats:
+                t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
+                t2 = "NEW ORBIT -- SMA:" + vesselDimorphos.orbit.semiMajorAxis.ToString() + " - ECC:" + vesselDimorphos.orbit.eccentricity.ToString() + " - INC:" + vesselDimorphos.orbit.inclination.ToString() + " - PER:" + vesselDimorphos.orbit.period.ToString();
+                //we wrap in try-catch in case it goes null when closed.
+                try
+                {
+                    if (!dialogDimorphos.isActiveAndEnabled)
+                    {
+                        userSaidStopTrackingDimorphos = true;
+                    }
+                }
+                catch
+                {
+                    //userSaidStopTrackingDimorphos = true;
+                }
+            }
+            if (!impactedDimorphos)
+            {
+                t1 = "";
+                t2 = "";
+                if (nearestVesselDistance < 150000)
+                {
+                    //We are close, Update the sampling interval to speed up sampling
+                    collisionCheckCounterCheckRate = 50;
+                }
+                else
+                {
+                    //We aren't close anymore, reduce sampling rate for performance
+                    collisionCheckCounterCheckRate = 500;
                 }
             }
         }
-		
-        // Stuff
+        public void OnGUI()
+        {
+            Rect rect1 = new Rect(0f, 0f, 100f, 10f);
+            Rect rect2 = new Rect(0f, 0f, 100f, 10f);
+            GUIStyle timeLabelStyleTop = new GUIStyle(GUI.skin.label);
+            GUIStyle timeLabelStyleBottom = new GUIStyle(GUI.skin.label);
+            timeLabelStyleTop.fontSize = (int)Math.Round((24 * GameSettings.UI_SCALE));
+            timeLabelStyleBottom.fontSize = (int)Math.Round((24 * GameSettings.UI_SCALE));
+            Vector2 vector1 = timeLabelStyleTop.CalcSize(new GUIContent(t1));
+            Vector2 vector2 = timeLabelStyleBottom.CalcSize(new GUIContent(t2));
+            rect1.Set(0f, (float)(Screen.height * 0.05), Screen.width, vector1.y);
+            rect2.Set(0f, (float)(Screen.height * 0.1), Screen.width, vector1.y);
+            DrawOutline(rect1, t1, 1, timeLabelStyleTop, Color.black, Color.white);
+            DrawOutline(rect2, t2, 1, timeLabelStyleBottom, Color.black, Color.white);
+        }
+        private void DrawOutline(Rect r, string t, int strength, GUIStyle style, Color outColor, Color inColor)
+        {
+            Color textColor = style.normal.textColor;
+            style.normal.textColor = outColor;
+            for (int i = -strength; i <= strength; i++)
+            {
+                GUI.Label(new Rect(r.x - (float)strength, r.y + (float)i, r.width, r.height), t, style);
+                GUI.Label(new Rect(r.x + (float)strength, r.y + (float)i, r.width, r.height), t, style);
+            }
+            for (int j = -strength + 1; j <= strength - 1; j++)
+            {
+                GUI.Label(new Rect(r.x + (float)j, r.y - (float)strength, r.width, r.height), t, style);
+                GUI.Label(new Rect(r.x + (float)j, r.y + (float)strength, r.width, r.height), t, style);
+            }
+            style.normal.textColor = inColor;
+            GUI.Label(r, t, style);
+            style.normal.textColor = textColor;
+        }
         private void LateUpdate()
         {
+            if ((!userSaidStopTrackingDimorphos) && (HighLogic.LoadedScene.Equals(GameScenes.FLIGHT) || (HighLogic.LoadedScene.Equals(GameScenes.SPACECENTER) || (HighLogic.LoadedScene.Equals(GameScenes.TRACKSTATION)))))
+            {
+                collisionCheckCounter++;
+                if (collisionCheckCounter > collisionCheckCounterCheckRate)
+                {
+                    CollisionCheck();
+                    collisionCheckCounter = 0;
+                }
+            }
+            else
+            {
+                t1 = "";
+                t2 = "";
+            }
             FixZooming();
             ApplyRnDPatches();
             Force3DRendering();
@@ -208,7 +360,6 @@ namespace Kopernicus.RuntimeUtility
         [SuppressMessage("ReSharper", "Unity.IncorrectMethodSignature")]
         private void OnLevelWasLoaded(GameScenes scene)
         {
-            PatchColliders();
             PatchFlightIntegrator();
             FixCameras();
             PatchTimeOfDayAnimation();
@@ -438,14 +589,14 @@ namespace Kopernicus.RuntimeUtility
                     Destroy(this);
                     return;
                 }
-         
+
                 fixes.Add(body.transform.name,
                     new KeyValuePair<CelestialBody, CelestialBody>(oldRef, body.referenceBody));
                 body.referenceBody.orbitingBodies.Add(body);
                 body.referenceBody.orbitingBodies =
                     body.referenceBody.orbitingBodies.OrderBy(cb => cb.orbit.semiMajorAxis).ToList();
                 body.orbit.Init();
-    
+
                 //body.orbitDriver.UpdateOrbit();
 
                 // Calculations
@@ -454,18 +605,18 @@ namespace Kopernicus.RuntimeUtility
                     body.sphereOfInfluence = body.orbit.semiMajorAxis *
                                              Math.Pow(body.Mass / body.orbit.referenceBody.Mass, 0.4);
                 }
-              
+
                 if (!body.Has("hillSphere"))
                 {
                     body.hillSphere = body.orbit.semiMajorAxis * (1 - body.orbit.eccentricity) *
                                       Math.Pow(body.Mass / body.orbit.referenceBody.Mass, 0.333333333333333);
                 }
-              
+
                 if (!body.solarRotationPeriod)
                 {
-                   continue;
+                    continue;
                 }
-       
+
                 Double rotationPeriod = body.rotationPeriod;
                 Double orbitalPeriod = body.orbit.period;
                 body.rotationPeriod = rotationPeriod * orbitalPeriod / (orbitalPeriod + rotationPeriod);
@@ -573,8 +724,11 @@ namespace Kopernicus.RuntimeUtility
                 return;
             }
 
-            MapView.fetch.max3DlineDrawDist = Single.MaxValue;
-            GameSettings.MAP_MAX_ORBIT_BEFORE_FORCE2D = Int32.MaxValue;
+            if (MapView.fetch)
+            {
+                MapView.fetch.max3DlineDrawDist = Single.MaxValue;
+                GameSettings.MAP_MAX_ORBIT_BEFORE_FORCE2D = Int32.MaxValue;
+            }
         }
 
         // The preset names
@@ -617,7 +771,7 @@ namespace Kopernicus.RuntimeUtility
                 FieldInfo castField = typeof(OrbitTargeter).GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
                     .FirstOrDefault(f => f.FieldType == typeof(OrbitRenderer.OrbitCastHit));
 
-                _fields = new[] {modeField, contextField, castField};
+                _fields = new[] { modeField, contextField, castField };
             }
 
             // Remove buttons in map view for barycenters
@@ -632,7 +786,7 @@ namespace Kopernicus.RuntimeUtility
                 return;
             }
 
-            Int32 mode = (Int32) _fields[0].GetValue(targeter);
+            Int32 mode = (Int32)_fields[0].GetValue(targeter);
             if (mode != 2)
             {
                 return;
@@ -778,12 +932,13 @@ namespace Kopernicus.RuntimeUtility
         // Patch FlightIntegrator
         private static void PatchFlightIntegrator()
         {
-            if (HighLogic.LoadedScene.Equals(GameScenes.SPACECENTER))
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
             {
-                Events.OnRuntimeUtilityPatchFI.Fire();
-                ModularFlightIntegrator.RegisterCalculateSunBodyFluxOverride(KopernicusStar.SunBodyFlux);
-                ModularFlightIntegrator.RegisterCalculateBackgroundRadiationTemperatureOverride(KopernicusHeatManager.RadiationTemperature);
+                return;
             }
+            Events.OnRuntimeUtilityPatchFI.Fire();
+            ModularFlightIntegrator.RegisterCalculateSunBodyFluxOverride(KopernicusStar.SunBodyFlux);
+            ModularFlightIntegrator.RegisterCalculateBackgroundRadiationTemperatureOverride(KopernicusHeatManager.RadiationTemperature);
         }
 
         private static void PatchContracts()
@@ -813,7 +968,7 @@ namespace Kopernicus.RuntimeUtility
                     {
                         ContractSystem.ContractTypes.Remove(contractTypeToRemove);
                         contractTypeToRemove = null;
-                        Debug.Log("[Kopernicus] Due to selected asteroid spawner, SENTINEL Contracts are broken and have been scrubbed.");
+                        Debug.Log("[DART] Due to selected asteroid spawner, SENTINEL Contracts are broken and have been scrubbed.");
                     }
                 }
                 catch
@@ -833,7 +988,7 @@ namespace Kopernicus.RuntimeUtility
         private static void FixCameras()
         {
             // Only run in the space center or the editor
-            if ((((previousScene != GameScenes.LOADING) || (previousScene != GameScenes.MAINMENU)) && ((HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))) || ((previousScene == GameScenes.SPACECENTER) && ((HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))))
+            if ((((previousScene != GameScenes.LOADING) || (previousScene != GameScenes.MAINMENU)) && HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor) || ((previousScene == GameScenes.SPACECENTER) && HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))
             {
                 return;
             }
@@ -844,7 +999,7 @@ namespace Kopernicus.RuntimeUtility
             // If there's no body, exit.
             if (body == null)
             {
-                Logger.Active.Log("[Kopernicus] Couldn't find the parental body!");
+                Logger.Active.Log("[DART] Couldn't find the parental body!");
                 return;
             }
 
@@ -854,7 +1009,7 @@ namespace Kopernicus.RuntimeUtility
             // If there's no KSC, exit.
             if (ksc == null)
             {
-                Logger.Active.Log("[Kopernicus] Couldn't find the KSC object!");
+                Logger.Active.Log("[DART] Couldn't find the KSC object!");
                 return;
             }
 
@@ -917,7 +1072,7 @@ namespace Kopernicus.RuntimeUtility
                     }
                     else
                     {
-                        Logger.Active.Log("[Kopernicus] SSC2 can't find initial transform!");
+                        Logger.Active.Log("[DART] SSC2 can't find initial transform!");
                         Transform initialTrfOrig = transform1.GetValue(cam) as Transform;
                         if (initialTrfOrig != null)
                         {
@@ -925,7 +1080,7 @@ namespace Kopernicus.RuntimeUtility
                         }
                         else
                         {
-                            Logger.Active.Log("[Kopernicus] SSC2 own initial transform null!");
+                            Logger.Active.Log("[DART] SSC2 own initial transform null!");
                         }
                     }
                     Transform camTransform = transform2.GetValue(cam) as Transform;
@@ -943,7 +1098,7 @@ namespace Kopernicus.RuntimeUtility
                     }
                     else
                     {
-                        Logger.Active.Log("[Kopernicus] SSC2 cam transform null!");
+                        Logger.Active.Log("[DART] SSC2 cam transform null!");
                     }
 
                     cam.ResetCamera();
@@ -956,15 +1111,15 @@ namespace Kopernicus.RuntimeUtility
                     }
                     else
                     {
-                        Logger.Active.Log("[Kopernicus] SSC2 surfaceObject is null!");
+                        Logger.Active.Log("[DART] SSC2 surfaceObject is null!");
                     }
 
                     surfaceObj.SetValue(cam, SurfaceObject.Create(initialTransform.gameObject, FlightGlobals.currentMainBody, 3, KFSMUpdateMode.FIXEDUPDATE));
-                    Logger.Active.Log("[Kopernicus] Fixed SpaceCenterCamera");
+                    Logger.Active.Log("[DART] Fixed SpaceCenterCamera");
                 }
                 else
                 {
-                    Logger.Active.Log("[Kopernicus] ERROR fixing space center camera, could not find some fields");
+                    Logger.Active.Log("[DART] ERROR fixing space center camera, could not find some fields");
                 }
             }
         }
@@ -1026,23 +1181,23 @@ namespace Kopernicus.RuntimeUtility
         }
 
         // Flag Fixer
-        private  void ApplyFlagFixes()
+        private void ApplyFlagFixes()
         {
             GameEvents.OnKSCFacilityUpgraded.Add(FixFlags);
             GameEvents.OnKSCStructureRepaired.Add(FixFlags);
         }
 
-        private  void FixFlags(DestructibleBuilding data)
+        private void FixFlags(DestructibleBuilding data)
         {
             FixFlags();
         }
 
-        private  void FixFlags(Upgradeables.UpgradeableFacility data0, int data1)
+        private void FixFlags(Upgradeables.UpgradeableFacility data0, int data1)
         {
             FixFlags();
         }
 
-        private  void FixFlags()
+        private void FixFlags()
         {
             PQSCity KSC = FlightGlobals.GetHomeBody()?.pqsController?.GetComponentsInChildren<PQSCity>(true)?.FirstOrDefault(p => p?.name == "KSC");
             SkinnedMeshRenderer[] flags = KSC?.GetComponentsInChildren<SkinnedMeshRenderer>(true)?.Where(smr => smr?.name == "Flag")?.ToArray();
@@ -1056,7 +1211,7 @@ namespace Kopernicus.RuntimeUtility
         {
             if (!File.Exists(PluginPath + "/../Config/Kopernicus_Config.cfg"))
             {
-                Debug.Log("[Kopernicus] Generating default Kopernicus_Config.cfg");
+                Debug.Log("[DART] Generating default Kopernicus_Config.cfg");
                 StreamWriter configFile = new StreamWriter(PluginPath + "/../Config/Kopernicus_Config.cfg");
                 configFile.WriteLine("// Kopernicus base configuration.  Provides ability to flag things and set user options.  Generates at defaults for stock system and warnings config.");
                 configFile.WriteLine("Kopernicus_config");
@@ -1065,7 +1220,7 @@ namespace Kopernicus.RuntimeUtility
                 configFile.WriteLine("	WarnShaders = false");
                 configFile.WriteLine("	EnforcedShaderLevel = 2");
                 configFile.WriteLine("	ScatterCullDistance = 5000");
-                configFile.WriteLine("	UseKopernicusAsteroidSystem = True");
+                configFile.WriteLine("	UseKopernicusAsteroidSystem = Stock");
                 configFile.WriteLine("	SolarRefreshRate = 1");
                 configFile.WriteLine("}");
                 configFile.Flush();

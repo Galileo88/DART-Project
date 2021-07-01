@@ -66,11 +66,11 @@ namespace Kopernicus.RuntimeUtility
                 try
                 {
                     Meshes.Add(binFiles[i], Utility.DeserializeMesh(binFiles[i]));
-                    Debug.Log("[Kopernicus] Loaded '" + binFiles[i] + "'");
+                    Debug.Log("[DART] Loaded '" + binFiles[i] + "'");
                 }
                 catch
                 {
-                    Debug.Log("[Kopernicus] Could not load '" + binFiles[i] + "'");
+                    Debug.Log("[DART] Could not load '" + binFiles[i] + "'");
                 }
 
                 yield return null;
@@ -94,7 +94,7 @@ namespace Kopernicus.RuntimeUtility
 
             if (LoadingScreen.Instance == null)
             {
-                Debug.Log("[Kopernicus] LoadingScreen instance not found! Aborting Mesh preloading.");
+                Debug.Log("[DART] LoadingScreen instance not found! Aborting Mesh preloading.");
                 return;
             }
 

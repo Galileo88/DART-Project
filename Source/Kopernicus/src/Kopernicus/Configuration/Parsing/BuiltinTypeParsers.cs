@@ -107,7 +107,7 @@ namespace Kopernicus.Configuration.Parsing
                     return;
                 }
 
-                Debug.LogError("[Kopernicus] Could not find built-in texture " + textureName);
+                Debug.LogError("[DART] Could not find built-in texture " + textureName);
                 Logger.Active.Log("Could not find built-in texture " + textureName);
                 return;
             }
@@ -136,7 +136,7 @@ namespace Kopernicus.Configuration.Parsing
                 }
                 catch
                 {
-                    Debug.LogError("[Kopernicus] Failed to upload texture " + Value.name + " to the GPU");
+                    Debug.LogError("[DART] Failed to upload texture " + Value.name + " to the GPU");
                     Logger.Active.Log("Failed to upload texture " + Value.name + " to the GPU");
                 }
 

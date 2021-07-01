@@ -52,7 +52,7 @@ namespace Kopernicus.RuntimeUtility
         public void SetAsActive()
         {
             // Set star as active star
-            Debug.Log("[Kopernicus]: StarLightSwitcher: Set active star => " + CelestialBody.bodyName);
+            Debug.Log("[DART]: StarLightSwitcher: Set active star => " + CelestialBody.bodyName);
             KopernicusStar.Current = KopernicusStar.Stars.Find(s => s.sun == CelestialBody);
 
             // Set custom powerCurve for solar panels and reset Radiators

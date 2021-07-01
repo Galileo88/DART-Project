@@ -49,8 +49,8 @@ namespace Kopernicus.Constants
     {
         // Compatible version
         internal const Int32 VERSION_MAJOR = 1;
-#if (!KSP_VERSION_1_8)
-        internal const Int32 VERSION_MINOR = 11;
+#if !KSP_VERSION_1_8
+        internal const Int32 VERSION_MINOR = 12;
 #else
         internal const Int32 VERSION_MINOR = 8;
 #endif
@@ -84,14 +84,20 @@ namespace Kopernicus.Constants
 
         private void Awake()
         {
-            // If Kopernicus isn't compatible, activate the cats
+            // If Kopernicus isn't compatible, no longer activate the cats (RIP)
             if (IsCompatible())
             {
+#if !KSP_VERSION_1_8
+                // warn about unsupported versions
+                if (((Versioning.version_minor == 11) && (Versioning.Revision > 2)) || ((Versioning.version_minor == 12) && (Versioning.Revision > 2)) || (Versioning.version_minor > 12))
+                {
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART","DART","DART is in beta on this version of KSP...  Bugs may be present!", "OK", false, UISkinManager.defaultSkin);
+                }
+#endif
                 return;
             }
 
-            // Nobody can read that popup
-            ScreenMessages.PostScreenMessage("Kopernicus will not work on this version of KSP!\nPlease don't try to open your saved games!", 5f, ScreenMessageStyle.UPPER_CENTER);
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "DART will not work on this version of KSP!\nPlease don't try to open your saved games!", "OK", true, UISkinManager.defaultSkin);
         }
 
         public void Start()

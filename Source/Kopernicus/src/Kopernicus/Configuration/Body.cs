@@ -300,12 +300,16 @@ namespace Kopernicus.Configuration
                                 MonoBehaviour MBOGS = MaterialBasedOnGraphicsSetting(GeneratedBody);
                                 GameObject.DestroyImmediate(GGMC);
                                 GameObject.DestroyImmediate(MBOGS);
-                                UnityEngine.Debug.Log("[Kopernicus] New Jool detected, shaders stripped!");
+                                UnityEngine.Debug.Log("[DART] New Jool detected, shaders stripped!");
                             }
                             catch
                             {
-                                UnityEngine.Debug.Log("[Kopernicus] Old Jool detected, leaving shaders alone!");
+                                UnityEngine.Debug.Log("[DART] Old Jool detected, leaving shaders alone!");
                             }
+                        }
+                        else
+                        {
+                            UnityEngine.Debug.Log("[DART] Original Jool detected, leaving shaders alone!");
                         }
                     }
                 }
@@ -348,7 +352,7 @@ namespace Kopernicus.Configuration
         internal MonoBehaviour GasGiantMaterialControls(PSystemBody generatedBody)
         {
             MonoBehaviour[] components = generatedBody.scaledVersion.GetComponents<MonoBehaviour>();
-            if ((Versioning.version_minor == 10) || (Versioning.version_minor == 11))
+            if (Versioning.version_minor > 9)
             {
                 MonoBehaviour component = components[3]; //strict index, likely to break
                 if (component.name.Equals(generatedBody.scaledVersion.name))
@@ -361,7 +365,7 @@ namespace Kopernicus.Configuration
         internal MonoBehaviour MaterialBasedOnGraphicsSetting(PSystemBody generatedBody)
         {
             MonoBehaviour[] components = generatedBody.scaledVersion.GetComponents<MonoBehaviour>();
-            if ((Versioning.version_minor == 10) || (Versioning.version_minor == 11))
+            if (Versioning.version_minor > 9)
             {
                 MonoBehaviour component = components[2]; //strict index, likely to break
                 if (component.name.Equals(generatedBody.scaledVersion.name))

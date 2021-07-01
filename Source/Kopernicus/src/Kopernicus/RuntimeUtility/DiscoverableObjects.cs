@@ -85,7 +85,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 if (RuntimeUtility.KopernicusConfig.UseKopernicusAsteroidSystem.ToLower().Equals("true"))
                 {
-                    Debug.Log("[Kopernicus] Using Kopernicus Asteroid Spawner.");
+                    Debug.Log("[DART] Using Kopernicus Asteroid Spawner.");
                     foreach (Asteroid asteroid in Asteroids)
                     {
                         StartCoroutine(AsteroidDaemon(asteroid));
@@ -93,7 +93,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 else if (RuntimeUtility.KopernicusConfig.UseKopernicusAsteroidSystem.ToLower().Equals("false"))
                 {
-                    Debug.Log("[Kopernicus] Asteroid Spawners disabled.  Unless external spawner mod is installed no discoverable objects will be spawned.");
+                    Debug.Log("[DART] Asteroid Spawners disabled.  Unless external spawner mod is installed no discoverable objects will be spawned.");
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace Kopernicus.RuntimeUtility
             }
             else if (RuntimeUtility.KopernicusConfig.UseKopernicusAsteroidSystem.ToLower().Equals("stock"))
             {
-                Debug.Log("[Kopernicus] Using stock Squad Asteroid Spawner.");
+                Debug.Log("[DART] Using stock Squad Asteroid Spawner.");
             }
         }
 
@@ -116,7 +116,7 @@ namespace Kopernicus.RuntimeUtility
             if (spaceObjects.Any())
             {
                 Vessel vessel = spaceObjects.First();
-                Debug.Log("[Kopernicus] " + vessel.vesselName + " has been untracked for too long and is now lost.");
+                Debug.Log("[DART] " + vessel.vesselName + " has been untracked for too long and is now lost.");
                 vessel.Die();
             }
             else if (GameVariables.Instance.UnlockedSpaceObjectDiscovery(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation)))
@@ -135,7 +135,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 else
                 {
-                    Debug.Log("[Kopernicus] No new objects this time. (Probability is " + asteroid.Probability.Value + "%)");
+                    Debug.Log("[DART] No new objects this time. (Probability is " + asteroid.Probability.Value + "%)");
                 }
             }
         }
@@ -233,7 +233,7 @@ namespace Kopernicus.RuntimeUtility
             // Check 
             if (orbit == null)
             {
-                Debug.Log("[Kopernicus] No new objects this time. (Probability is " + asteroid.Probability.Value + "%)");
+                Debug.Log("[DART] No new objects this time. (Probability is " + asteroid.Probability.Value + "%)");
                 return;
             }
 
@@ -280,7 +280,7 @@ namespace Kopernicus.RuntimeUtility
             protoVessel.Load(HighLogic.CurrentGame.flightState);
             GameEvents.onNewVesselCreated.Fire(protoVessel.vesselRef);
             GameEvents.onAsteroidSpawned.Fire(protoVessel.vesselRef);
-            Debug.Log("[Kopernicus] New object found near " + body.name + ": " + protoVessel.vesselName + "!");
+            Debug.Log("[DART] New object found near " + body.name + ": " + protoVessel.vesselName + "!");
         }
 
         // Asteroid Spawner

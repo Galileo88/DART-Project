@@ -43,7 +43,7 @@ namespace Kopernicus.Components
         /// </summary>
         public static Shader GetShader(String shaderName)
         {
-            Debug.Log("[Kopernicus] ShaderLoader: GetShader " + shaderName);
+            Debug.Log("[DART] ShaderLoader: GetShader " + shaderName);
             return ShaderDictionary.ContainsKey(shaderName) ? ShaderDictionary[shaderName] : null;
         }
 
@@ -75,14 +75,14 @@ namespace Kopernicus.Components
                 path = Path.Combine(path, bundleName + "-macosx.unity3d");
             }
 
-            Debug.Log("[Kopernicus] ShaderLoader: Loading asset bundle at path " + path);
+            Debug.Log("[DART] ShaderLoader: Loading asset bundle at path " + path);
 
             AssetBundle bundle = AssetBundle.LoadFromFile(path);
             Shader[] shaders = bundle.LoadAllAssets<Shader>();
 
             foreach (Shader shader in shaders)
             {
-                Debug.Log("[Kopernicus] ShaderLoader: adding " + shader.name);
+                Debug.Log("[DART] ShaderLoader: adding " + shader.name);
                 ShaderDictionary.Add(shader.name, shader);
             }
 

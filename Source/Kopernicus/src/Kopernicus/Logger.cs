@@ -61,7 +61,7 @@ namespace Kopernicus
                 }
                 
                 _defaultLogger = new Logger(typeof(Logger).Assembly.GetName().Name);
-                Debug.Log("[Kopernicus] Default logger initialized as " + typeof(Logger).Assembly.GetName().Name);
+                Debug.Log("[DART] Default logger initialized as " + typeof(Logger).Assembly.GetName().Name);
                 return _defaultLogger;
             }
         }

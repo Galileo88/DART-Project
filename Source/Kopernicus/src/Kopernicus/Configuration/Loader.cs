@@ -252,7 +252,7 @@ namespace Kopernicus.Configuration
                     Parser.LoadObjectFromConfigurationNode(currentBody, bodyNode, "Kopernicus"); //logs to active logger
                     bodies.Add(currentBody);
                     Events.OnLoaderLoadBody.Fire(currentBody, bodyNode);
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Loaded Body: " + currentBody.Name);
+                    Logger.Default.Log("[DART]: Configuration.Loader: Loaded Body: " + currentBody.Name);
                     Parser.ClearState("Kopernicus:currentBody");
 
                     // Restore default logger
@@ -263,7 +263,7 @@ namespace Kopernicus.Configuration
                 {
                     logger.LogException(e);
                     logger.Close(); //implicit flush
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Failed to load Body: " + name + ": " +
+                    Logger.Default.Log("[DART]: Configuration.Loader: Failed to load Body: " + name + ": " +
                                        e.Message);
                     throw new Exception("Failed to load Body: " + name);
                 }
@@ -293,7 +293,7 @@ namespace Kopernicus.Configuration
                         Parser.CreateObjectFromConfigNode<Asteroid>(asteroidNode, "Kopernicus"); //logs to active logger
                     DiscoverableObjects.Asteroids.Add(asteroid);
                     Events.OnLoaderLoadAsteroid.Fire(asteroid, asteroidNode);
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Loaded Asteroid: " + asteroid.Name);
+                    Logger.Default.Log("[DART]: Configuration.Loader: Loaded Asteroid: " + asteroid.Name);
 
                     // Restore default logger
                     Logger.Default.SetAsActive();
@@ -301,7 +301,7 @@ namespace Kopernicus.Configuration
                 }
                 catch (Exception e)
                 {
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Failed to load Asteroid: " +
+                    Logger.Default.Log("[DART]: Configuration.Loader: Failed to load Asteroid: " +
                                        asteroidNode.GetValue("name") + ": " + e.Message);
                     logger.LogException(e);
                     logger.Close();
@@ -323,7 +323,7 @@ namespace Kopernicus.Configuration
                     preset.Load(presetNode);
                     if (PQSCache.PresetList.presets.Any(p => p.name == preset.name))
                     {
-                        Logger.Default.Log("[Kopernicus]: Configuration.Loader: Failed to load Preset: " + preset.name);
+                        Logger.Default.Log("[DART]: Configuration.Loader: Failed to load Preset: " + preset.name);
                         continue;
                     }
 
@@ -337,11 +337,11 @@ namespace Kopernicus.Configuration
                     }
 
                     Templates.PresetDisplayNames.Add(displayName);
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Loaded Preset: " + preset.name);
+                    Logger.Default.Log("[DART]: Configuration.Loader: Loaded Preset: " + preset.name);
                 }
                 catch
                 {
-                    Logger.Default.Log("[Kopernicus]: Configuration.Loader: Failed to load Preset: " +
+                    Logger.Default.Log("[DART]: Configuration.Loader: Failed to load Preset: " +
                                        presetNode.GetValue("name"));
                     throw new Exception("Failed to load Asteroid: " + presetNode.GetValue("name"));
                 }

@@ -88,7 +88,7 @@ namespace Kopernicus.RuntimeUtility
                 PSystemBody body = PSystemManager.Instance.systemPrefab.GetComponentsInChildren<PSystemBody>(true).FirstOrDefault(b => b.name == cb.transform.name);
                 if (body == null)
                 {
-                    Debug.Log("[Kopernicus]: RnDFixer: Could not find PSystemBody => " + cb.transform.name);
+                    Debug.Log("[DART]: RnDFixer: Could not find PSystemBody => " + cb.transform.name);
                     continue;
                 }
 
@@ -96,7 +96,7 @@ namespace Kopernicus.RuntimeUtility
                 PSystemBody oldParent = PSystemManager.Instance.systemPrefab.GetComponentsInChildren<PSystemBody>(true).FirstOrDefault(b => b.children.Contains(body));
                 if (oldParent == null)
                 {
-                    Debug.Log("[Kopernicus]: RnDFixer: Could not find referenceBody of CelestialBody => " + cb.transform.name);
+                    Debug.Log("[DART]: RnDFixer: Could not find referenceBody of CelestialBody => " + cb.transform.name);
                     continue;
                 }
 
@@ -109,7 +109,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 if (oldParent == null)
                 {
-                    Debug.Log("[Kopernicus]: RnDFixer: Could not find PostSpawn referenceBody of CelestialBody => " + cb.transform.name);
+                    Debug.Log("[DART]: RnDFixer: Could not find PostSpawn referenceBody of CelestialBody => " + cb.transform.name);
                     newParent = oldParent;
                 }
                 NumericParser<Double> newSemiMajorAxis = body.orbitDriver.orbit.semiMajorAxis;
@@ -293,7 +293,7 @@ namespace Kopernicus.RuntimeUtility
                 CelestialBody body = PSystemManager.Instance.localBodies.FirstOrDefault(cb => cb.transform.name == planetItem.name);
                 if (body == null)
                 {
-                    Debug.Log("[Kopernicus]: RnDFixer: Could not find CelestialBody for the label => " + planetItem.name);
+                    Debug.Log("[DART]: RnDFixer: Could not find CelestialBody for the label => " + planetItem.name);
                     continue;
                 }
 
