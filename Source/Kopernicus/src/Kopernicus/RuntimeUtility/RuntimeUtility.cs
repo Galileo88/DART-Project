@@ -70,7 +70,7 @@ namespace Kopernicus.RuntimeUtility
             }
         }
         private static int collisionCheckCounter = 0;
-        private static int collisionCheckCounterCheckRate = 50;
+        private static int collisionCheckCounterCheckRate = 10;
         private static bool impactedDimorphos = false;
         private static bool setupDimorphos = false;
         private static double smaDimorphos = 0;
@@ -80,6 +80,8 @@ namespace Kopernicus.RuntimeUtility
         private static bool userSaidStopTrackingDimorphos = false;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
+        private static bool frameSampleDue = true;
+        private static bool frameTestDue = false;
         private static string t1 = "";
         private static string t2 = "";
         public static GameScenes previousScene = GameScenes.MAINMENU;
@@ -177,7 +179,7 @@ namespace Kopernicus.RuntimeUtility
         {
             List<Vessel> vessels = FlightGlobals.Vessels;
             //Sample original orbital parameters of Dimorphos
-            if (!setupDimorphos)
+            if (frameSampleDue)
             {
                 try
                 {
@@ -198,12 +200,21 @@ namespace Kopernicus.RuntimeUtility
                                         if (part.partInfo.name.Equals("Dimorphos"))
                                         {
                                             partDimorphos = part;
-                                            if (!setupDimorphos)
+                                            if (frameSampleDue)
                                             {
+                                                if (partDimorphos.vessel.orbit.eccentricity.Equals(0))
+                                                {
+                                                    //this means it has not truly loaded and this number is worthless
+                                                    frameSampleDue = false;
+                                                    frameTestDue = true;
+                                                    return;
+                                                }
                                                 smaDimorphos = partDimorphos.vessel.orbit.semiMajorAxis;
                                                 eccDimorphos = partDimorphos.vessel.orbit.eccentricity;
                                                 incDimorphos = partDimorphos.vessel.orbit.inclination;
                                                 perDimorphos = partDimorphos.vessel.orbit.period;
+                                                frameSampleDue = false;
+                                                frameTestDue = true;
                                                 setupDimorphos = true;
                                             }
                                         }
@@ -219,46 +230,54 @@ namespace Kopernicus.RuntimeUtility
                 }
                 catch
                 {
-                    setupDimorphos = false;
+                    frameSampleDue = false;
+                    frameTestDue = true;
                     return;
                 }
+                frameSampleDue = false;
+                frameTestDue = true;
             }
-            //Test current orbital parameters of Dimorphos
-            if ((!impactedDimorphos) && (setupDimorphos))
+            else if ((!impactedDimorphos) && (frameTestDue))
             {
                 try
                 {
-                    if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 18)
+                    if (setupDimorphos)
                     {
-                        //IMPACT!!!
-                        impactedDimorphos = true;
-                    }
-                    else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.01)
-                    {
-                        //IMPACT!!!
-                        impactedDimorphos = true;
-                    }
-                    else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.125)
-                    {
-                        //IMPACT!!!
-                        impactedDimorphos = true;
-                    }
-                    else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1000)
-                    {
-                        //IMPACT!!!
-                        impactedDimorphos = true;
-                    }
-                    if (impactedDimorphos == true)
-                    {
-                        //inform user
-                        dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 2.5)
+                        {
+                            //IMPACT!!!
+                            impactedDimorphos = true;
+                        }
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00075)
+                        {
+                            //IMPACT!!!
+                            impactedDimorphos = true;
+                        }
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.005)
+                        {
+                            //IMPACT!!!
+                            impactedDimorphos = true;
+                        }
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 10)
+                        {
+                            //IMPACT!!!
+                            impactedDimorphos = true;
+                        }
+                        if (impactedDimorphos == true)
+                        {
+                            //inform user
+                            dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                        }
                     }
                 }
                 catch
                 {
                     //it may generate an exception if the vessel is unloaded, this handles it.
-                    setupDimorphos = false;
+                    frameSampleDue = true;
+                    frameTestDue = false;
                 }
+                frameSampleDue = true;
+                frameTestDue = false;
             }
             if (impactedDimorphos)
             {
