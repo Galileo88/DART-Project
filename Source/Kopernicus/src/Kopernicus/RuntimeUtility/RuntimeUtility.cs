@@ -296,12 +296,12 @@ namespace Kopernicus.RuntimeUtility
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.000075)
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00075)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00005)
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.0005)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
