@@ -190,7 +190,7 @@ namespace Kopernicus.RuntimeUtility
                             {
                                 foreach (Part part in vessel.parts)
                                 {
-                                    if (part.partInfo.name.Equals("Diimorpho"))
+                                    if (part.partInfo.name.Equals("Dimorphos"))
                                     {
                                         partDimorphos = part;
                                     }
@@ -216,7 +216,7 @@ namespace Kopernicus.RuntimeUtility
             }
             foreach (Vessel vessel in vessels)
             {
-                if (vessel.vesselName.Equals("Diimorpho"))
+                if (vessel.vesselName.Equals("Dimorphos"))
                 {
                     continue;
                 }
