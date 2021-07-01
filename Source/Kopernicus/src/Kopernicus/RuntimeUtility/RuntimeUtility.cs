@@ -80,6 +80,7 @@ namespace Kopernicus.RuntimeUtility
         private static bool userSaidStopTrackingDimorphos = false;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
+        private static Vessel vesselDimorphos = null;
         private static bool frameSampleDue = true;
         private static bool frameTestDue = false;
         private static string t1 = "";
@@ -187,6 +188,10 @@ namespace Kopernicus.RuntimeUtility
                     {
                         if (vessel.vesselType.Equals(VesselType.SpaceObject))
                         {
+                            if (vessel.vesselName.Equals("Dimorphos"))
+                            {
+                                vesselDimorphos = vessel;
+                            }
                             if (!vessel.loaded)
                             {
                                 continue;
@@ -239,10 +244,60 @@ namespace Kopernicus.RuntimeUtility
             }
             else if ((!impactedDimorphos) && (frameTestDue))
             {
+                double nearestDistance = double.MaxValue;
+                foreach (Vessel vessel in vessels)
+                {
+                    if (vessel.Equals(vesselDimorphos))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
+                        if (newDistance < nearestDistance)
+                        {
+                            nearestDistance = newDistance;
+                        }
+                    }
+                }
+                if ((nearestDistance < 300000000) &&(TimeWarp.CurrentRateIndex > 6))
+                {
+                    TimeWarp.SetRate(6,true,true);
+                }
+                if ((nearestDistance < 30000000) && (TimeWarp.CurrentRateIndex > 5))
+                {
+                    TimeWarp.SetRate(5, true, true);
+                }
+                if ((nearestDistance < 3400000) && (TimeWarp.CurrentRateIndex > 4))
+                {
+                    TimeWarp.SetRate(4, true, true);
+                }
+                if ((nearestDistance < 890000) && (TimeWarp.CurrentRateIndex > 3))
+                {
+                    TimeWarp.SetRate(3, true, true);
+                }
+                if ((nearestDistance < 260000) && (TimeWarp.CurrentRateIndex > 2))
+                {
+                    TimeWarp.SetRate(2, true, true);
+                }
+                if ((nearestDistance < 89000) && (TimeWarp.CurrentRateIndex > 1))
+                {
+                    TimeWarp.SetRate(1, true, true);
+                }
+                if ((nearestDistance < 21000) && (TimeWarp.CurrentRateIndex > 0))
+                {
+                    TimeWarp.SetRate(0, true, true);
+                }
                 try
                 {
                     if (setupDimorphos)
                     {
+                        if (partDimorphos.vessel.orbit.eccentricity.Equals(0))
+                        {
+                            frameSampleDue = true;
+                            frameTestDue = false;
+                            return;
+                        }
                         if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 0.25)
                         {
                             //IMPACT!!!
@@ -253,12 +308,12 @@ namespace Kopernicus.RuntimeUtility
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00075)
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00005)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 5)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 2.5)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
