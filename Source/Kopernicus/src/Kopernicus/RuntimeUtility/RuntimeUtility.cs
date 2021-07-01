@@ -253,40 +253,32 @@ namespace Kopernicus.RuntimeUtility
                     }
                     else
                     {
-                        double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
+                        double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.mainBody.position);
                         if (newDistance < nearestDistance)
                         {
                             nearestDistance = newDistance;
                         }
                     }
                 }
-                if ((nearestDistance < 300000000) &&(TimeWarp.CurrentRateIndex > 6))
-                {
-                    TimeWarp.SetRate(6,true,true);
-                }
-                if ((nearestDistance < 30000000) && (TimeWarp.CurrentRateIndex > 5))
+                if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 5))
                 {
                     TimeWarp.SetRate(5, true, true);
                 }
-                if ((nearestDistance < 3400000) && (TimeWarp.CurrentRateIndex > 4))
+                if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 4))
                 {
-                    TimeWarp.SetRate(4, true, true);
+                    TimeWarp.SetRate(4,true,true);
                 }
-                if ((nearestDistance < 890000) && (TimeWarp.CurrentRateIndex > 3))
+                if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 3))
                 {
                     TimeWarp.SetRate(3, true, true);
                 }
-                if ((nearestDistance < 260000) && (TimeWarp.CurrentRateIndex > 2))
+                if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 2))
                 {
                     TimeWarp.SetRate(2, true, true);
                 }
-                if ((nearestDistance < 89000) && (TimeWarp.CurrentRateIndex > 1))
+                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 1))
                 {
                     TimeWarp.SetRate(1, true, true);
-                }
-                if ((nearestDistance < 21000) && (TimeWarp.CurrentRateIndex > 0))
-                {
-                    TimeWarp.SetRate(0, true, true);
                 }
                 try
                 {
