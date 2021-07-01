@@ -243,22 +243,22 @@ namespace Kopernicus.RuntimeUtility
                 {
                     if (setupDimorphos)
                     {
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 2.5)
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 0.25)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00075)
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00005)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.005)
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00075)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 10)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 5)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
