@@ -290,12 +290,12 @@ namespace Kopernicus.RuntimeUtility
                             frameTestDue = false;
                             return;
                         }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 0.25)
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 25)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00005)
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.000075)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
@@ -305,7 +305,7 @@ namespace Kopernicus.RuntimeUtility
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 2.5)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 250)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
