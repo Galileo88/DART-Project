@@ -204,7 +204,6 @@ namespace Kopernicus.RuntimeUtility
                                                 eccDimorphos = partDimorphos.vessel.orbit.eccentricity;
                                                 incDimorphos = partDimorphos.vessel.orbit.inclination;
                                                 perDimorphos = partDimorphos.vessel.orbit.period;
-                                                collisionCheckCounterCheckRate = 50;
                                                 setupDimorphos = true;
                                             }
                                         }
@@ -220,7 +219,6 @@ namespace Kopernicus.RuntimeUtility
                 }
                 catch
                 {
-                    collisionCheckCounterCheckRate = 250;
                     setupDimorphos = false;
                     return;
                 }
@@ -235,7 +233,7 @@ namespace Kopernicus.RuntimeUtility
                         //IMPACT!!!
                         impactedDimorphos = true;
                     }
-                    else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.008)
+                    else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.01)
                     {
                         //IMPACT!!!
                         impactedDimorphos = true;
@@ -259,7 +257,6 @@ namespace Kopernicus.RuntimeUtility
                 catch
                 {
                     //it may generate an exception if the vessel is unloaded, this handles it.
-                    collisionCheckCounterCheckRate = 250;
                     setupDimorphos = false;
                 }
             }
