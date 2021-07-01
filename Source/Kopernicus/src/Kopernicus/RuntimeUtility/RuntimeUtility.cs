@@ -45,6 +45,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using KSP.Localization;
 using Object = UnityEngine.Object;
+using DART.SpaceObjects;
 
 namespace Kopernicus.RuntimeUtility
 {
@@ -69,7 +70,7 @@ namespace Kopernicus.RuntimeUtility
             }
         }
         private static int collisionCheckCounter = 0;
-        private static int collisionCheckCounterCheckRate = 500;
+        private static int collisionCheckCounterCheckRate = 50;
         private static bool impactedDimorphos = false;
         private static bool setupDimorphos = false;
         private static double smaDimorphos = 0;
@@ -174,17 +175,19 @@ namespace Kopernicus.RuntimeUtility
         //Collision checker
         private static void CollisionCheck()
         {
-            Vessel nearestVessel;
-            double nearestVesselDistance = Double.MaxValue;
             List<Vessel> vessels = FlightGlobals.Vessels;
             //Sample original orbital parameters of Dimorphos
-            if (!setupDimorphos)
+            try
             {
-                try
+                foreach (Vessel vessel in vessels)
                 {
-                    foreach (Vessel vessel in vessels)
+                    if (vessel.vesselType.Equals(VesselType.SpaceObject))
                     {
-                        if (vessel.vesselType.Equals(VesselType.SpaceObject))
+                        if (!vessel.loaded)
+                        {
+                            continue;
+                        }
+                        else
                         {
                             try
                             {
@@ -193,6 +196,14 @@ namespace Kopernicus.RuntimeUtility
                                     if (part.partInfo.name.Equals("Dimorphos"))
                                     {
                                         partDimorphos = part;
+                                        if (!setupDimorphos)
+                                        {
+                                            smaDimorphos = partDimorphos.vessel.orbit.semiMajorAxis;
+                                            eccDimorphos = partDimorphos.vessel.orbit.eccentricity;
+                                            incDimorphos = partDimorphos.vessel.orbit.inclination;
+                                            perDimorphos = partDimorphos.vessel.orbit.period;
+                                            setupDimorphos = true;
+                                        }
                                     }
                                 }
                             }
@@ -202,80 +213,63 @@ namespace Kopernicus.RuntimeUtility
                             }
                         }
                     }
-
-                    smaDimorphos = partDimorphos.vessel.orbit.semiMajorAxis;
-                    eccDimorphos = partDimorphos.vessel.orbit.eccentricity;
-                    incDimorphos = partDimorphos.vessel.orbit.inclination;
-                    perDimorphos = partDimorphos.vessel.orbit.period;
-                    setupDimorphos = true;
+                }
+            }
+            catch
+            {
+                return;
+            }
+            //Test current orbital parameters of Dimorphos
+            if ((!impactedDimorphos) && (setupDimorphos))
+            {
+                try
+                {
+                    if (!(Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 20))
+                    {
+                        //IMPACT!!!
+                        impactedDimorphos = true;
+                    }
+                    else if (!(Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.01))
+                    {
+                        //IMPACT!!!
+                        impactedDimorphos = true;
+                    }
+                    else if (!(Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.175))
+                    {
+                        //IMPACT!!!
+                        impactedDimorphos = true;
+                    }
+                    else if (!(Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1000))
+                    {
+                        //IMPACT!!!
+                        impactedDimorphos = true;
+                    }
+                    if (impactedDimorphos == true)
+                    {
+                        //inform user
+                        dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                    }
                 }
                 catch
                 {
-                    return;
-                }
-            }
-            foreach (Vessel vessel in vessels)
-            {
-                if (vessel.vesselName.Equals("Dimorphos"))
-                {
-                    continue;
-                }
-                if (vessel.mainBody.name.Equals("Didymos") && (!vessel.vesselType.Equals(VesselType.SpaceObject)))
-                {
-                    double testDistance = double.MaxValue;
-                    try
-                    {
-                        testDistance = Vector3d.Distance(vessel.GetWorldPos3D(), partDimorphos.vessel.GetWorldPos3D());
-                    }
-                    catch
-                    {
-                        testDistance = double.MaxValue;
-                    }
-                    if (testDistance < nearestVesselDistance)
-                    {
-                        nearestVessel = vessel;
-                        nearestVesselDistance = testDistance;
-                    }
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            //Sample current orbital parameters of Dimorphos
-            if (!impactedDimorphos)
-            {
-                if (!smaDimorphos.Equals(partDimorphos.vessel.orbit.semiMajorAxis))
-                {
-                    //IMPACT!!!
-                    impactedDimorphos = true;
-                }
-                if (!eccDimorphos.Equals(partDimorphos.vessel.orbit.eccentricity))
-                {
-                    //IMPACT!!!
-                    impactedDimorphos = true;
-                }
-                if (!incDimorphos.Equals(partDimorphos.vessel.orbit.inclination))
-                {
-                    //IMPACT!!!
-                    impactedDimorphos = true;
-                }
-                if (!perDimorphos.Equals(partDimorphos.vessel.orbit.period))
-                {
-                    //IMPACT!!!
-                    impactedDimorphos = true;
-                }
-                if (impactedDimorphos == true)
-                {
-                    //inform user
-                    dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                    //it may generate an exception if the vessel is unloaded, this handles it.
                 }
             }
             if (impactedDimorphos)
             {
                 //Immediately begin posting/logging stats:
-                t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
-                t2 = "NEW ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
+                if (setupDimorphos)
+                {
+                    t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
+                    try
+                    {
+                        t2 = "NEW ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
+                    }
+                    catch
+                    {
+                        //it may generate an exception if the vessel is unloaded, this handles it.
+                    }
+                }
                 //we wrap in try-catch in case it goes null when closed.
                 try
                 {
@@ -293,16 +287,6 @@ namespace Kopernicus.RuntimeUtility
             {
                 t1 = "";
                 t2 = "";
-                if (nearestVesselDistance < 150000)
-                {
-                    //We are close, Update the sampling interval to speed up sampling
-                    collisionCheckCounterCheckRate = 50;
-                }
-                else
-                {
-                    //We aren't close anymore, reduce sampling rate for performance
-                    collisionCheckCounterCheckRate = 500;
-                }
             }
         }
         public void OnGUI()
