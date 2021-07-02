@@ -70,7 +70,7 @@ namespace Kopernicus.RuntimeUtility
             }
         }
         private static int collisionCheckCounter = 0;
-        private static int collisionCheckCounterCheckRate = 10;
+        private static int collisionCheckCounterCheckRate = 25;
         private static bool impactedDimorphos = false;
         private static bool setupDimorphos = false;
         private static double smaDimorphos = 0;
