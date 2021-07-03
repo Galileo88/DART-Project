@@ -53,6 +53,7 @@ namespace Kopernicus.Components.ModularScatter
                 if (distance > maxdistance)
                 {
                     surfaceObjectQuad.SendMessage("SetActive", false);
+                    isEnabled = false;
                 }
                 else
                 {
@@ -61,6 +62,7 @@ namespace Kopernicus.Components.ModularScatter
                     {
                         MeshRenderer surfaceObject = kopSurfaceObjects[i].GetComponent<MeshRenderer>();
                         surfaceObject.enabled = true;
+                        isEnabled = true;
                     }
                 }
             }
