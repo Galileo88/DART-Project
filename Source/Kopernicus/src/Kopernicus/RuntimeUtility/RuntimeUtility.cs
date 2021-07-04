@@ -45,7 +45,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using KSP.Localization;
 using Object = UnityEngine.Object;
-using DART.SpaceObjects;
 
 namespace Kopernicus.RuntimeUtility
 {
@@ -1063,7 +1062,7 @@ namespace Kopernicus.RuntimeUtility
         private static void FixCameras()
         {
             // Only run in the space center or the editor
-            if ((((previousScene != GameScenes.LOADING) || (previousScene != GameScenes.MAINMENU)) && HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor) || ((previousScene == GameScenes.SPACECENTER) && HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))
+            if ((((previousScene != GameScenes.LOADING) || (previousScene != GameScenes.MAINMENU)) && ((HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))) || ((previousScene == GameScenes.SPACECENTER) && ((HighLogic.LoadedScene != GameScenes.SPACECENTER && !HighLogic.LoadedSceneIsEditor))))
             {
                 return;
             }
@@ -1295,6 +1294,7 @@ namespace Kopernicus.RuntimeUtility
                 configFile.WriteLine("	WarnShaders = false");
                 configFile.WriteLine("	EnforcedShaderLevel = 2");
                 configFile.WriteLine("	ScatterCullDistance = 5000");
+                configFile.WriteLine("	ScatterCleanupDelta = 10");
                 configFile.WriteLine("	UseKopernicusAsteroidSystem = Stock");
                 configFile.WriteLine("	SolarRefreshRate = 1");
                 configFile.WriteLine("}");
