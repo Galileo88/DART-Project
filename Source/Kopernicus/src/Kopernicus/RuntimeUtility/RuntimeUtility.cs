@@ -77,6 +77,7 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
+        private static bool hasCrossedBoundary = false;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
         private static Vessel vesselDimorphos = null;
@@ -260,25 +261,30 @@ namespace Kopernicus.RuntimeUtility
                         }
                     }
                 }
-                if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 5))
+                if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 6))
                 {
-                    TimeWarp.SetRate(5, true, true);
+                    if (!hasCrossedBoundary)
+                    {
+                        hasCrossedBoundary = true;
+                        TimeWarp.SetRate(0, true, true);
+                    }
+                    TimeWarp.SetRate(6, true, true);
                 }
-                if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 4))
+                if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 5))
                 {
-                    TimeWarp.SetRate(4,true,true);
+                    TimeWarp.SetRate(5,true,true);
                 }
-                if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 3))
+                if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 4))
+                {
+                    TimeWarp.SetRate(4, true, true);
+                }
+                if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 3))
                 {
                     TimeWarp.SetRate(3, true, true);
                 }
-                if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 2))
+                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 2))
                 {
                     TimeWarp.SetRate(2, true, true);
-                }
-                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 1))
-                {
-                    TimeWarp.SetRate(1, true, true);
                 }
                 try
                 {
