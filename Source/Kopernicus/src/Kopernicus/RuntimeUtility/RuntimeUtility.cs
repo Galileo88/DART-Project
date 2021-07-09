@@ -268,7 +268,10 @@ namespace Kopernicus.RuntimeUtility
                         hasCrossedBoundary = true;
                         TimeWarp.SetRate(0, true, true);
                     }
-                    TimeWarp.SetRate(6, true, true);
+                    else
+                    {
+                        TimeWarp.SetRate(6, true, true);
+                    }
                 }
                 if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 5))
                 {

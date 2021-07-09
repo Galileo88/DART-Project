@@ -39,9 +39,6 @@
     <Reference Include="ModularFlightIntegrator">
       <HintPath>H:\KSP1121\GameData\DART\Plugins\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
     </Reference>
-    <Reference Include="SpaceObjectSpawner">
-      <HintPath>H:\KSP1121\GameData\DART\Plugins\SpaceObjectSpawner.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
