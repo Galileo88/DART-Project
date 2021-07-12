@@ -248,17 +248,24 @@ namespace Kopernicus.RuntimeUtility
                 double nearestDistance = double.MaxValue;
                 foreach (Vessel vessel in vessels)
                 {
-                    if (vessel.Equals(vesselDimorphos))
+                    try
+                    {
+                        if (vessel.Equals(vesselDimorphos))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.mainBody.position);
+                            if (newDistance < nearestDistance)
+                            {
+                                nearestDistance = newDistance;
+                            }
+                        }
+                    }
+                    catch
                     {
                         continue;
-                    }
-                    else
-                    {
-                        double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.mainBody.position);
-                        if (newDistance < nearestDistance)
-                        {
-                            nearestDistance = newDistance;
-                        }
                     }
                 }
                 if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 6))
