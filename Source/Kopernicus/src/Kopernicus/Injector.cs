@@ -44,9 +44,9 @@ namespace Kopernicus
         // Name of the config node group which manages Kopernicus
         private const String ROOT_NODE_NAME = "Kopernicus";
 
-        // The checksum of the System.cfg file.
+        // The checksum of the System.cfg file, disabled for DART.
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private const String CONFIG_CHECKSUM = "4bd4a359d4fa3624d7b84d602eac6c5ebd9296aa54736e9a6e9d59ca50c9b183";
+        //private const String CONFIG_CHECKSUM = "4bd4a359d4fa3624d7b84d602eac6c5ebd9296aa54736e9a6e9d59ca50c9b183";
 
         // Backup of the old system prefab, in case someone deletes planet templates we need at Runtime (Kittopia)
         public static PSystem StockSystemPrefab { get; private set; }
@@ -107,8 +107,8 @@ namespace Kopernicus
                     return;
                 }
 
-                // Was the system template modified?
-                #if !DEBUG
+                // Was the system template modified?  (We don't check for DART)
+                /*
                 String systemCfgPath = KSPUtil.ApplicationRootPath + "GameData/DART/Config/System.cfg";
                 if (File.Exists(systemCfgPath))
                 {
@@ -122,8 +122,7 @@ namespace Kopernicus
                         throw new Exception(
                             "The file 'DART/Config/System.cfg' was modified directly without ModuleManager");
                     }
-                }
-                #endif
+                }*/
 
                 // Backup the old prefab
                 StockSystemPrefab = PSystemManager.Instance.systemPrefab;
