@@ -268,7 +268,27 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 6))
+                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 2))
+                {
+                    hasCrossedBoundary = false;
+                    TimeWarp.SetRate(2, true, true);
+                }
+                else if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 3))
+                {
+                    hasCrossedBoundary = false;
+                    TimeWarp.SetRate(3, true, true);
+                }
+                else if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 4))
+                {
+                    hasCrossedBoundary = false;
+                    TimeWarp.SetRate(4, true, true);
+                }
+                else if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 5))
+                {
+                    hasCrossedBoundary = false;
+                    TimeWarp.SetRate(5, true, true);
+                }
+                else if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 6))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -279,26 +299,6 @@ namespace Kopernicus.RuntimeUtility
                     {
                         TimeWarp.SetRate(6, true, true);
                     }
-                }
-                if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 5))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(5,true,true);
-                }
-                if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 4))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(4, true, true);
-                }
-                if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 3))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(3, true, true);
-                }
-                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 2))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(2, true, true);
                 }
                 try
                 {
