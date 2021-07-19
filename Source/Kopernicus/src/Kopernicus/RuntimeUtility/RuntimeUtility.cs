@@ -256,7 +256,7 @@ namespace Kopernicus.RuntimeUtility
                         }
                         else
                         {
-                            double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.mainBody.position);
+                            double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
@@ -268,37 +268,70 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                if ((nearestDistance < 496) && (TimeWarp.CurrentRateIndex > 2))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(2, true, true);
-                }
-                else if ((nearestDistance < 696) && (TimeWarp.CurrentRateIndex > 3))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(3, true, true);
-                }
-                else if ((nearestDistance < 996) && (TimeWarp.CurrentRateIndex > 4))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(4, true, true);
-                }
-                else if ((nearestDistance < 4396) && (TimeWarp.CurrentRateIndex > 5))
-                {
-                    hasCrossedBoundary = false;
-                    TimeWarp.SetRate(5, true, true);
-                }
-                else if ((nearestDistance < 20296) && (TimeWarp.CurrentRateIndex > 6))
+                if ((nearestDistance < 496))
                 {
                     if (!hasCrossedBoundary)
                     {
                         hasCrossedBoundary = true;
                         TimeWarp.SetRate(0, true, true);
                     }
-                    else
+                    else if (TimeWarp.CurrentRateIndex > 2)
+                    {
+                        TimeWarp.SetRate(2, true, true);
+                    }
+                }
+                else if ((nearestDistance < 696))
+                {
+                    if (!hasCrossedBoundary)
+                    {
+                        hasCrossedBoundary = true;
+                        TimeWarp.SetRate(0, true, true);
+                    }
+                    else if (TimeWarp.CurrentRateIndex > 3)
+                    {
+                        TimeWarp.SetRate(3, true, true);
+                    }
+                }
+                else if ((nearestDistance < 996))
+                {
+                    if (!hasCrossedBoundary)
+                    {
+                        hasCrossedBoundary = true;
+                        TimeWarp.SetRate(0, true, true);
+                    }
+                    else if (TimeWarp.CurrentRateIndex > 4)
+                    {
+                        TimeWarp.SetRate(4, true, true);
+                    }
+                }
+                else if ((nearestDistance < 4396))
+                {
+                    if (!hasCrossedBoundary)
+                    {
+                        hasCrossedBoundary = true;
+                        TimeWarp.SetRate(0, true, true);
+                    }
+                    else if (TimeWarp.CurrentRateIndex > 5)
+                    {
+                        TimeWarp.SetRate(5, true, true);
+                    }
+                }
+                else if ((nearestDistance < 20296))
+                {
+                    if (!hasCrossedBoundary)
+                    {
+                        hasCrossedBoundary = true;
+                        TimeWarp.SetRate(0, true, true);
+                    }
+                    else if (TimeWarp.CurrentRateIndex > 6)
                     {
                         TimeWarp.SetRate(6, true, true);
                     }
+                }
+                else
+
+                {
+                    hasCrossedBoundary = false;
                 }
                 try
                 {
