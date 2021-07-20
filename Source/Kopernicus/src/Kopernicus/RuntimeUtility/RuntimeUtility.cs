@@ -278,7 +278,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 else
                 {
-                    calculatedSpeed = (lastRegisteredDistance - nearestDistance);
+                    calculatedSpeed = (lastRegisteredDistance - nearestDistance) * 2;
                     lastRegisteredDistance = nearestDistance;
                 }
                 if ((nearestDistance < (calculatedSpeed * 8)) && (TimeWarp.CurrentRateIndex > 0))
@@ -319,22 +319,22 @@ namespace Kopernicus.RuntimeUtility
                             frameTestDue = false;
                             return;
                         }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 25)
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 1)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00075)
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00003)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.0005)
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00002)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 250)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 10)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
