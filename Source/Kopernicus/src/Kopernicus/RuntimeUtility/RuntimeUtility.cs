@@ -68,8 +68,6 @@ namespace Kopernicus.RuntimeUtility
                 return pluginPath;
             }
         }
-        private static int collisionCheckCounter = 0;
-        private static int collisionCheckCounterCheckRate = 25;
         private static bool impactedDimorphos = false;
         private static bool setupDimorphos = false;
         private static double smaDimorphos = 0;
@@ -246,7 +244,6 @@ namespace Kopernicus.RuntimeUtility
             else if ((!impactedDimorphos) && (frameTestDue))
             {
                 double nearestDistance = double.MaxValue;
-                Vessel nearestVessel = null;
                 foreach (Vessel vessel in vessels)
                 {
                     try
@@ -261,7 +258,6 @@ namespace Kopernicus.RuntimeUtility
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
-                                nearestVessel = vessel;
                             }
                         }
                     }
@@ -270,25 +266,19 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                //Warp evaluate logic
-                nearestVessel.targetObject = vesselDimorphos;
-                Vector3 velocity1 = nearestVessel.velocityD;
-                Vector3 velocity2 = vesselDimorphos.velocityD;
-                float vesselSpeed = Math.Abs(Vector3.Magnitude(velocity1 - velocity2));
-                float vesselMult = vesselSpeed / 512;
-                if ((nearestDistance < (496 * vesselMult)))
+                if ((nearestDistance < 496))
                 {
                     if (!hasCrossedBoundary)
                     {
                         hasCrossedBoundary = true;
                         TimeWarp.SetRate(0, true, true);
                     }
-                    else if (TimeWarp.CurrentRateIndex > 2)
+                    else if (TimeWarp.CurrentRateIndex > 0)
                     {
-                        TimeWarp.SetRate(2, true, true);
+                        TimeWarp.SetRate(0, true, true);
                     }
                 }
-                else if ((nearestDistance < (696 * vesselMult)))
+                else if ((nearestDistance < 696))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -300,7 +290,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(3, true, true);
                     }
                 }
-                else if ((nearestDistance < (996 * vesselMult)))
+                else if ((nearestDistance < 996))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -312,7 +302,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(4, true, true);
                     }
                 }
-                else if ((nearestDistance < (4396 * vesselMult)))
+                else if ((nearestDistance < 4396))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -324,7 +314,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(5, true, true);
                     }
                 }
-                else if ((nearestDistance < (20296 * vesselMult)))
+                else if ((nearestDistance < 20296))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -337,6 +327,7 @@ namespace Kopernicus.RuntimeUtility
                     }
                 }
                 else
+
                 {
                     hasCrossedBoundary = false;
                 }
@@ -462,12 +453,7 @@ namespace Kopernicus.RuntimeUtility
         {
             if ((!userSaidStopTrackingDimorphos) && (HighLogic.LoadedScene.Equals(GameScenes.FLIGHT) || (HighLogic.LoadedScene.Equals(GameScenes.SPACECENTER) || (HighLogic.LoadedScene.Equals(GameScenes.TRACKSTATION)))))
             {
-                collisionCheckCounter++;
-                if (collisionCheckCounter > collisionCheckCounterCheckRate)
-                {
-                    CollisionCheck();
-                    collisionCheckCounter = 0;
-                }
+                CollisionCheck();
             }
             else
             {
