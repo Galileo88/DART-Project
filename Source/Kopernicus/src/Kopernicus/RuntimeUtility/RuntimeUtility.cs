@@ -75,7 +75,7 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
-        private static bool hasCrossedBoundary = false;
+        private static double lastRegisteredDistance = 0;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
         private static Vessel vesselDimorphos = null;
@@ -252,6 +252,10 @@ namespace Kopernicus.RuntimeUtility
                         {
                             continue;
                         }
+                        else if (!vessel.mainBody.bodyName.Equals("Didymos"))
+                        {
+                            continue;
+                        }
                         else
                         {
                             double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
@@ -266,70 +270,44 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                if ((nearestDistance < 496))
+                double calculatedSpeed;
+                if (lastRegisteredDistance.Equals(0))
                 {
-                    if (!hasCrossedBoundary)
-                    {
-                        hasCrossedBoundary = true;
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                    else if (TimeWarp.CurrentRateIndex > 0)
-                    {
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                }
-                else if ((nearestDistance < 696))
-                {
-                    if (!hasCrossedBoundary)
-                    {
-                        hasCrossedBoundary = true;
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                    else if (TimeWarp.CurrentRateIndex > 3)
-                    {
-                        TimeWarp.SetRate(3, true, true);
-                    }
-                }
-                else if ((nearestDistance < 996))
-                {
-                    if (!hasCrossedBoundary)
-                    {
-                        hasCrossedBoundary = true;
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                    else if (TimeWarp.CurrentRateIndex > 4)
-                    {
-                        TimeWarp.SetRate(4, true, true);
-                    }
-                }
-                else if ((nearestDistance < 4396))
-                {
-                    if (!hasCrossedBoundary)
-                    {
-                        hasCrossedBoundary = true;
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                    else if (TimeWarp.CurrentRateIndex > 5)
-                    {
-                        TimeWarp.SetRate(5, true, true);
-                    }
-                }
-                else if ((nearestDistance < 20296))
-                {
-                    if (!hasCrossedBoundary)
-                    {
-                        hasCrossedBoundary = true;
-                        TimeWarp.SetRate(0, true, true);
-                    }
-                    else if (TimeWarp.CurrentRateIndex > 6)
-                    {
-                        TimeWarp.SetRate(6, true, true);
-                    }
+                    lastRegisteredDistance = nearestDistance;
+                    calculatedSpeed = 0;
                 }
                 else
-
                 {
-                    hasCrossedBoundary = false;
+                    calculatedSpeed = (lastRegisteredDistance - nearestDistance);
+                    lastRegisteredDistance = nearestDistance;
+                }
+                if ((nearestDistance < (calculatedSpeed * 8)) && (TimeWarp.CurrentRateIndex > 0))
+                {
+                    TimeWarp.SetRate(0, true, true); //Set rate to 1x
+                }
+                else if ((nearestDistance < (calculatedSpeed * 34)) && (TimeWarp.CurrentRateIndex > 1))
+                {
+                    TimeWarp.SetRate(1, true, true); //Set rate to 5x
+                }
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 100),496))) && (TimeWarp.CurrentRateIndex > 2))
+                {
+                    TimeWarp.SetRate(2, true, true); //Set rate to 10x
+                }
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 340), 696))) && (TimeWarp.CurrentRateIndex > 3))
+                {
+                    TimeWarp.SetRate(3, true, true); //Set rate to 50x
+                }
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 1300), 996))) && (TimeWarp.CurrentRateIndex > 4))
+                {
+                    TimeWarp.SetRate(4, true, true); //Set rate to 100x
+                }
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 11450), 4396))) && (TimeWarp.CurrentRateIndex > 5))
+                {
+                    TimeWarp.SetRate(5, true, true); //Set rate to 1000x
+                }
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 112950), 20296))) && (TimeWarp.CurrentRateIndex > 6))
+                {
+                    TimeWarp.SetRate(6, true, true); //Set rate to 10000x
                 }
                 try
                 {
@@ -364,6 +342,7 @@ namespace Kopernicus.RuntimeUtility
                         if (impactedDimorphos == true)
                         {
                             //inform user
+                            lastRegisteredDistance = 0;
                             dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
                         }
                     }
@@ -392,7 +371,7 @@ namespace Kopernicus.RuntimeUtility
                         //it may generate an exception if the vessel is unloaded, this handles it.
                     }
                 }
-                //we wrap in try-catch in case it goes null when closed.
+                //we wrap in try-catch in case dialog goes null when closed.
                 try
                 {
                     if (!dialogDimorphos.isActiveAndEnabled)
