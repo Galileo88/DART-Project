@@ -246,6 +246,7 @@ namespace Kopernicus.RuntimeUtility
             else if ((!impactedDimorphos) && (frameTestDue))
             {
                 double nearestDistance = double.MaxValue;
+                Vessel nearestVessel = null;
                 foreach (Vessel vessel in vessels)
                 {
                     try
@@ -260,6 +261,7 @@ namespace Kopernicus.RuntimeUtility
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
+                                nearestVessel = vessel;
                             }
                         }
                     }
@@ -268,7 +270,13 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                if ((nearestDistance < 496))
+                //Warp evaluate logic
+                nearestVessel.targetObject = vesselDimorphos;
+                Vector3 velocity1 = nearestVessel.velocityD;
+                Vector3 velocity2 = vesselDimorphos.velocityD;
+                float vesselSpeed = Math.Abs(Vector3.Magnitude(velocity1 - velocity2));
+                float vesselMult = vesselSpeed / 512;
+                if ((nearestDistance < (496 * vesselMult)))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -280,7 +288,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(2, true, true);
                     }
                 }
-                else if ((nearestDistance < 696))
+                else if ((nearestDistance < (696 * vesselMult)))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -292,7 +300,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(3, true, true);
                     }
                 }
-                else if ((nearestDistance < 996))
+                else if ((nearestDistance < (996 * vesselMult)))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -304,7 +312,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(4, true, true);
                     }
                 }
-                else if ((nearestDistance < 4396))
+                else if ((nearestDistance < (4396 * vesselMult)))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -316,7 +324,7 @@ namespace Kopernicus.RuntimeUtility
                         TimeWarp.SetRate(5, true, true);
                     }
                 }
-                else if ((nearestDistance < 20296))
+                else if ((nearestDistance < (20296 * vesselMult)))
                 {
                     if (!hasCrossedBoundary)
                     {
@@ -329,7 +337,6 @@ namespace Kopernicus.RuntimeUtility
                     }
                 }
                 else
-
                 {
                     hasCrossedBoundary = false;
                 }
