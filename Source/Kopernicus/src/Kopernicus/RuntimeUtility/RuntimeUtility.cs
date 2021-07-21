@@ -206,7 +206,7 @@ namespace Kopernicus.RuntimeUtility
                                             partDimorphos = part;
                                             if (frameSampleDue)
                                             {
-                                                if (partDimorphos.vessel.orbit.eccentricity.Equals(0))
+                                                if (lastRegisteredDistance > 1180)
                                                 {
                                                     //this means it has not truly loaded and this number is worthless
                                                     frameSampleDue = false;
@@ -258,7 +258,7 @@ namespace Kopernicus.RuntimeUtility
                         }
                         else
                         {
-                            double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
+                            double newDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vessel.mainBody.position);
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
@@ -278,34 +278,34 @@ namespace Kopernicus.RuntimeUtility
                 }
                 else
                 {
-                    calculatedSpeed = (lastRegisteredDistance - nearestDistance) * 2;
+                    calculatedSpeed = (lastRegisteredDistance - nearestDistance) * 4;
                     lastRegisteredDistance = nearestDistance;
                 }
-                if ((nearestDistance < (calculatedSpeed * 8)) && (TimeWarp.CurrentRateIndex > 0))
+                if ((nearestDistance < (calculatedSpeed * 6)) && (TimeWarp.CurrentRateIndex > 0))
                 {
                     TimeWarp.SetRate(0, true, true); //Set rate to 1x
                 }
-                else if ((nearestDistance < (calculatedSpeed * 34)) && (TimeWarp.CurrentRateIndex > 1))
+                else if ((nearestDistance < (calculatedSpeed * 31)) && (TimeWarp.CurrentRateIndex > 1))
                 {
                     TimeWarp.SetRate(1, true, true); //Set rate to 5x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 100),496))) && (TimeWarp.CurrentRateIndex > 2))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 71),496))) && (TimeWarp.CurrentRateIndex > 2))
                 {
                     TimeWarp.SetRate(2, true, true); //Set rate to 10x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 340), 696))) && (TimeWarp.CurrentRateIndex > 3))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 271), 696))) && (TimeWarp.CurrentRateIndex > 3))
                 {
                     TimeWarp.SetRate(3, true, true); //Set rate to 50x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 1300), 996))) && (TimeWarp.CurrentRateIndex > 4))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 671), 996))) && (TimeWarp.CurrentRateIndex > 4))
                 {
                     TimeWarp.SetRate(4, true, true); //Set rate to 100x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 11450), 4396))) && (TimeWarp.CurrentRateIndex > 5))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 4671), 4396))) && (TimeWarp.CurrentRateIndex > 5))
                 {
                     TimeWarp.SetRate(5, true, true); //Set rate to 1000x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 112950), 20296))) && (TimeWarp.CurrentRateIndex > 6))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 44671), 20296))) && (TimeWarp.CurrentRateIndex > 6))
                 {
                     TimeWarp.SetRate(6, true, true); //Set rate to 10000x
                 }
@@ -319,22 +319,22 @@ namespace Kopernicus.RuntimeUtility
                             frameTestDue = false;
                             return;
                         }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 1)
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 50)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.00003)
+                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.5)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.00002)
+                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.0005)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 10)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1250)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
@@ -438,6 +438,19 @@ namespace Kopernicus.RuntimeUtility
             {
                 t1 = "";
                 t2 = "";
+                userSaidStopTrackingDimorphos = false;
+                impactedDimorphos = false;
+                setupDimorphos = false;
+                smaDimorphos = 0;
+                eccDimorphos = 0;
+                incDimorphos = 0;
+                perDimorphos = 0;
+                lastRegisteredDistance = 0;
+                dialogDimorphos = null;
+                partDimorphos = null;
+                vesselDimorphos = null;
+                frameSampleDue = true;
+                frameTestDue = false;
             }
             FixZooming();
             ApplyRnDPatches();
