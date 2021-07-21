@@ -75,7 +75,7 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
-        private static double lastRegisteredAsteroidDistance = 1200;
+        private static double lastRegisteredAsteroidDistance = Double.MaxValue;
         private static double calculatedSpeed = 0;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
@@ -207,7 +207,7 @@ namespace Kopernicus.RuntimeUtility
                                             partDimorphos = part;
                                             if (frameSampleDue)
                                             {
-                                                if (lastRegisteredAsteroidDistance > 725)
+                                                if (lastRegisteredAsteroidDistance > 500)
                                                 {
                                                     //this means it has not truly loaded and this number is worthless
                                                     frameSampleDue = false;
@@ -305,38 +305,9 @@ namespace Kopernicus.RuntimeUtility
                 {
                     if (setupDimorphos)
                     {
-                        if (partDimorphos.vessel.orbit.eccentricity.Equals(0))
-                        {
-                            frameSampleDue = true;
-                            frameTestDue = false;
-                            return;
-                        }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 150)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.5)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.0005)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1500)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        if (impactedDimorphos == true)
-                        {
-                            //inform user
-                            lastRegisteredAsteroidDistance = 0;
-                            dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
-                        }
+                        //inform user
+                        lastRegisteredAsteroidDistance = Double.MaxValue;
+                        dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You are on approach to Dimorphos!  Tracking orbital parameters!", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
                     }
                 }
                 catch
@@ -356,7 +327,7 @@ namespace Kopernicus.RuntimeUtility
                     t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
                     try
                     {
-                        t2 = "NEW ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
+                        t2 = "CURRENT ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
                     }
                     catch
                     {
