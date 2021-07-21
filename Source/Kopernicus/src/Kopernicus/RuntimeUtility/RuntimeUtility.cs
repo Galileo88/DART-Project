@@ -76,6 +76,7 @@ namespace Kopernicus.RuntimeUtility
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
         private static double lastRegisteredDistance = 0;
+        private static double calculatedSpeed = 0;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
         private static Vessel vesselDimorphos = null;
@@ -262,6 +263,7 @@ namespace Kopernicus.RuntimeUtility
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
+                                calculatedSpeed = vessel.obt_speed;
                             }
                         }
                     }
@@ -270,42 +272,39 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-                double calculatedSpeed;
                 if (lastRegisteredDistance.Equals(0))
                 {
                     lastRegisteredDistance = nearestDistance;
-                    calculatedSpeed = 0;
                 }
                 else
                 {
-                    calculatedSpeed = (lastRegisteredDistance - nearestDistance) * 4;
                     lastRegisteredDistance = nearestDistance;
                 }
-                if ((nearestDistance < (calculatedSpeed * 6)) && (TimeWarp.CurrentRateIndex > 0))
+                if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                 {
                     TimeWarp.SetRate(0, true, true); //Set rate to 1x
                 }
-                else if ((nearestDistance < (calculatedSpeed * 31)) && (TimeWarp.CurrentRateIndex > 1))
+                else if ((nearestDistance < (calculatedSpeed * 27)) && (TimeWarp.CurrentRateIndex > 1))
                 {
                     TimeWarp.SetRate(1, true, true); //Set rate to 5x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 71),496))) && (TimeWarp.CurrentRateIndex > 2))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 67),496))) && (TimeWarp.CurrentRateIndex > 2))
                 {
                     TimeWarp.SetRate(2, true, true); //Set rate to 10x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 271), 696))) && (TimeWarp.CurrentRateIndex > 3))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 267), 696))) && (TimeWarp.CurrentRateIndex > 3))
                 {
                     TimeWarp.SetRate(3, true, true); //Set rate to 50x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 671), 996))) && (TimeWarp.CurrentRateIndex > 4))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 667), 996))) && (TimeWarp.CurrentRateIndex > 4))
                 {
                     TimeWarp.SetRate(4, true, true); //Set rate to 100x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 4671), 4396))) && (TimeWarp.CurrentRateIndex > 5))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 4667), 4396))) && (TimeWarp.CurrentRateIndex > 5))
                 {
                     TimeWarp.SetRate(5, true, true); //Set rate to 1000x
                 }
-                else if ((nearestDistance < (Math.Max((calculatedSpeed * 44671), 20296))) && (TimeWarp.CurrentRateIndex > 6))
+                else if ((nearestDistance < (Math.Max((calculatedSpeed * 44667), 20296))) && (TimeWarp.CurrentRateIndex > 6))
                 {
                     TimeWarp.SetRate(6, true, true); //Set rate to 10000x
                 }
