@@ -75,7 +75,7 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
-        private static double lastRegisteredDistance = 0;
+        private static double lastRegisteredAsteroidDistance = 1200;
         private static double calculatedSpeed = 0;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
@@ -207,7 +207,7 @@ namespace Kopernicus.RuntimeUtility
                                             partDimorphos = part;
                                             if (frameSampleDue)
                                             {
-                                                if (lastRegisteredDistance > 1180)
+                                                if (lastRegisteredAsteroidDistance > 1000)
                                                 {
                                                     //this means it has not truly loaded and this number is worthless
                                                     frameSampleDue = false;
@@ -263,6 +263,7 @@ namespace Kopernicus.RuntimeUtility
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
+                                lastRegisteredAsteroidDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
                                 calculatedSpeed = vessel.obt_speed;
                             }
                         }
@@ -271,14 +272,6 @@ namespace Kopernicus.RuntimeUtility
                     {
                         continue;
                     }
-                }
-                if (lastRegisteredDistance.Equals(0))
-                {
-                    lastRegisteredDistance = nearestDistance;
-                }
-                else
-                {
-                    lastRegisteredDistance = nearestDistance;
                 }
                 if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                 {
@@ -318,7 +311,7 @@ namespace Kopernicus.RuntimeUtility
                             frameTestDue = false;
                             return;
                         }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 50)
+                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 150)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
@@ -333,7 +326,7 @@ namespace Kopernicus.RuntimeUtility
                             //IMPACT!!!
                             impactedDimorphos = true;
                         }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1250)
+                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1500)
                         {
                             //IMPACT!!!
                             impactedDimorphos = true;
@@ -341,7 +334,7 @@ namespace Kopernicus.RuntimeUtility
                         if (impactedDimorphos == true)
                         {
                             //inform user
-                            lastRegisteredDistance = 0;
+                            lastRegisteredAsteroidDistance = 0;
                             dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
                         }
                     }
@@ -444,7 +437,7 @@ namespace Kopernicus.RuntimeUtility
                 eccDimorphos = 0;
                 incDimorphos = 0;
                 perDimorphos = 0;
-                lastRegisteredDistance = 0;
+                lastRegisteredAsteroidDistance = 0;
                 dialogDimorphos = null;
                 partDimorphos = null;
                 vesselDimorphos = null;
