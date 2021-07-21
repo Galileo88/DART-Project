@@ -308,6 +308,7 @@ namespace Kopernicus.RuntimeUtility
                         //inform user
                         lastRegisteredAsteroidDistance = Double.MaxValue;
                         dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You are on approach to Dimorphos!  Tracking orbital parameters!", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
+                        impactedDimorphos = true;
                     }
                 }
                 catch
@@ -401,7 +402,7 @@ namespace Kopernicus.RuntimeUtility
             {
                 t1 = "";
                 t2 = "";
-                userSaidStopTrackingDimorphos = false;
+                userSaidStopTrackingDimorphos = true;
                 impactedDimorphos = false;
                 setupDimorphos = false;
                 smaDimorphos = 0;
@@ -441,6 +442,7 @@ namespace Kopernicus.RuntimeUtility
             PatchContracts();
             FixShadows();
             previousScene = HighLogic.LoadedScene;
+            userSaidStopTrackingDimorphos = false;
 
         }
 
