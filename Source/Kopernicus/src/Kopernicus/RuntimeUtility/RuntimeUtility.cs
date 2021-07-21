@@ -75,7 +75,7 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
-        private static double lastRegisteredDistance = 0;
+        private static double lastRegisteredAsteroidDistance = Double.MaxValue;
         private static double calculatedSpeed = 0;
         private static PopupDialog dialogDimorphos = null;
         private static Part partDimorphos = null;
@@ -207,7 +207,7 @@ namespace Kopernicus.RuntimeUtility
                                             partDimorphos = part;
                                             if (frameSampleDue)
                                             {
-                                                if (lastRegisteredDistance > 1180)
+                                                if (lastRegisteredAsteroidDistance > 500)
                                                 {
                                                     //this means it has not truly loaded and this number is worthless
                                                     frameSampleDue = false;
@@ -263,6 +263,7 @@ namespace Kopernicus.RuntimeUtility
                             if (newDistance < nearestDistance)
                             {
                                 nearestDistance = newDistance;
+                                lastRegisteredAsteroidDistance = Vector3d.Distance(vessel.GetWorldPos3D(), vesselDimorphos.GetWorldPos3D());
                                 calculatedSpeed = vessel.obt_speed;
                             }
                         }
@@ -271,14 +272,6 @@ namespace Kopernicus.RuntimeUtility
                     {
                         continue;
                     }
-                }
-                if (lastRegisteredDistance.Equals(0))
-                {
-                    lastRegisteredDistance = nearestDistance;
-                }
-                else
-                {
-                    lastRegisteredDistance = nearestDistance;
                 }
                 if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                 {
@@ -312,38 +305,9 @@ namespace Kopernicus.RuntimeUtility
                 {
                     if (setupDimorphos)
                     {
-                        if (partDimorphos.vessel.orbit.eccentricity.Equals(0))
-                        {
-                            frameSampleDue = true;
-                            frameTestDue = false;
-                            return;
-                        }
-                        if (Math.Abs(smaDimorphos - partDimorphos.vessel.orbit.semiMajorAxis) > 50)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(eccDimorphos - partDimorphos.vessel.orbit.eccentricity) > 0.5)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(incDimorphos - partDimorphos.vessel.orbit.inclination) > 0.0005)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        else if (Math.Abs(perDimorphos - partDimorphos.vessel.orbit.period) > 1250)
-                        {
-                            //IMPACT!!!
-                            impactedDimorphos = true;
-                        }
-                        if (impactedDimorphos == true)
-                        {
-                            //inform user
-                            lastRegisteredDistance = 0;
-                            dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You have impacted Dimorphos!  Tracking results onscreen...", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
-                        }
+                        //inform user
+                        lastRegisteredAsteroidDistance = Double.MaxValue;
+                        dialogDimorphos = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "DART", "DART", "You are on approach to Dimorphos!  Tracking orbital parameters!", "[STOP TRACKING]", true, UISkinManager.defaultSkin);
                     }
                 }
                 catch
@@ -363,7 +327,7 @@ namespace Kopernicus.RuntimeUtility
                     t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
                     try
                     {
-                        t2 = "NEW ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
+                        t2 = "CURRENT ORBIT -- SMA:" + partDimorphos.vessel.orbit.semiMajorAxis.ToString() + " - ECC:" + partDimorphos.vessel.orbit.eccentricity.ToString() + " - INC:" + partDimorphos.vessel.orbit.inclination.ToString() + " - PER:" + partDimorphos.vessel.orbit.period.ToString();
                     }
                     catch
                     {
@@ -444,7 +408,7 @@ namespace Kopernicus.RuntimeUtility
                 eccDimorphos = 0;
                 incDimorphos = 0;
                 perDimorphos = 0;
-                lastRegisteredDistance = 0;
+                lastRegisteredAsteroidDistance = 0;
                 dialogDimorphos = null;
                 partDimorphos = null;
                 vesselDimorphos = null;
