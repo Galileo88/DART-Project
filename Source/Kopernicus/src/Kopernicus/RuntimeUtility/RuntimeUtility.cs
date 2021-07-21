@@ -207,7 +207,7 @@ namespace Kopernicus.RuntimeUtility
                                             partDimorphos = part;
                                             if (frameSampleDue)
                                             {
-                                                if (lastRegisteredAsteroidDistance > 1000)
+                                                if (lastRegisteredAsteroidDistance > 725)
                                                 {
                                                     //this means it has not truly loaded and this number is worthless
                                                     frameSampleDue = false;
