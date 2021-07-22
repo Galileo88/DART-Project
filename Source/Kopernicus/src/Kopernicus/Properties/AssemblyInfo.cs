@@ -9,10 +9,10 @@ using Kopernicus.RuntimeUtility;
 [assembly: AssemblyCopyright ("Copyright (C) Kopernicus Project")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
-[assembly: KSPAssembly("Kopernicus", 1, 0)]
+[assembly: KSPAssembly("Kopernicus", 2, 0)]
 [assembly: KSPAssemblyDependency("Kopernicus.Parser", 1, 0)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
-[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyVersion("2.0.0")]
 
 [assembly: LogAggregator("GameData/ModuleManager.ConfigCache")]
 [assembly: LogAggregator("Logs/DART/")]
