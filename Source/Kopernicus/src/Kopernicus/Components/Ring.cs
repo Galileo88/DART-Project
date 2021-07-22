@@ -262,7 +262,7 @@ namespace Kopernicus.Components
         /// <summary>
         /// The shaders used by the ring mesh
         /// </summary>
-        private const String NEW_SHADER = "DART/Rings";
+        private const String NEW_SHADER = "Kopernicus/Rings";
         private const String UNLIT_SHADER = "Unlit/Transparent";
         private const String DIFFUSE_SHADER = "Legacy Shaders/Transparent/Diffuse";
 
