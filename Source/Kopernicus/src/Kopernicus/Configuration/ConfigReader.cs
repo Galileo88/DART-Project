@@ -45,9 +45,11 @@ namespace Kopernicus.Configuration
 		[Persistent]
 		public int ScatterCullDistance = 5000;
 		[Persistent]
-		public int ScatterCleanupDelta = 10;
+		public int ScatterCleanupDelta = 4;
 		[Persistent]
-		public string UseKopernicusAsteroidSystem = "True";
+		public string UseKopernicusAsteroidSystem = "Stock";
+		[Persistent]
+		public Boolean UsePureStockScatters = true;
 		[Persistent]
 		public int SolarRefreshRate = 1;
 		public UrlDir.UrlConfig[] baseConfigs;
@@ -69,7 +71,7 @@ namespace Kopernicus.Configuration
 				ConfigNode.LoadObjectFromConfig(this, baseConfigs[0].config);
 			}
 			catch
-            {
+			{
 				Debug.LogWarning("Error loading config, using defaults");
 			}
 		}
