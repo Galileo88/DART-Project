@@ -1,6 +1,6 @@
 # DART Challenge
 
-##Background
+## Background
 What should we do if we find a dangerous asteroid on course to hit Earth?  There are a number of possible deflection techniques, ranging from extreme (a nuclear blast) to benign (a heavy spacecraft uses gravity to nudge the asteroid off-course).
 Somewhere in between is the kinetic impactor technique.  The concept is simple:  Slam one or more spacecraft into the asteroid at high speed to change its orbit and move Earth out of the crosshairs.  This technique works particularly well if used far in advance, since small nudges can add up to big changes later on.
 
@@ -12,17 +12,17 @@ With the installation of DART Challenge, Didymos and Dimorphos are added to the 
 
 Didymos and Dimorphos are tiny targets that offer a difficult navigational challenge, but if you are able to guide a spacecraft to an impact with Dimorphos, the resulting changes are real and immediately observable.  Do you have the right stuff to save Kerbalkind from a deadly asteroid impact?  Take the DART Challenge and find out.
 
-##Installation
+## Installation
 Download the DART.zip file, extract the DART folder, and copy it to the GameData folder of your KSP installation.  Everything needed for it to work is self-contained; there are no required dependencies.  DART Challenge can also be installed via CKAN.
 
 ## Contributors
-Galileo
-JadeOfMaar
-OhioBob
-R-T-B
-Gameslinx AKA Linx
-Angel-125
-theRagingIrishman
+* Galileo
+* JadeOfMaar
+* OhioBob
+* R-T-B
+* Gameslinx AKA Linx
+* Angel-125
+* theRagingIrishman
 
-##License
+## License
 All Rights Reserved.
