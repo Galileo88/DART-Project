@@ -273,41 +273,79 @@ namespace Kopernicus.RuntimeUtility
                         continue;
                     }
                 }
-
-                if ((!FlightGlobals.ActiveVessel.Landed) || (lastRegisteredAsteroidDistance < 2))
+                if (FlightGlobals.ActiveVessel)
                 {
-                    if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
+                    if ((lastRegisteredAsteroidDistance < 2) && (!FlightGlobals.ActiveVessel.landedAt.Equals("Didymos"))&& (FlightGlobals.ActiveVessel.mainBody.name.Equals("Didymos")))
                     {
-                        TimeWarp.SetRate(0, true, true); //Set rate to 1x
+                        if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
+                        {
+                            TimeWarp.SetRate(0, true, true); //Set rate to 1x
+                        }
+                        else if ((nearestDistance < (calculatedSpeed * 27)) && (TimeWarp.CurrentRateIndex > 1))
+                        {
+                            TimeWarp.SetRate(1, true, true); //Set rate to 5x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 67), 496))) &&
+                                 (TimeWarp.CurrentRateIndex > 2))
+                        {
+                            TimeWarp.SetRate(2, true, true); //Set rate to 10x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 267), 696))) &&
+                                 (TimeWarp.CurrentRateIndex > 3))
+                        {
+                            TimeWarp.SetRate(3, true, true); //Set rate to 50x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 667), 996))) &&
+                                 (TimeWarp.CurrentRateIndex > 4))
+                        {
+                            TimeWarp.SetRate(4, true, true); //Set rate to 100x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 4667), 4396))) &&
+                                 (TimeWarp.CurrentRateIndex > 5))
+                        {
+                            TimeWarp.SetRate(5, true, true); //Set rate to 1000x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 44667), 20296))) &&
+                                 (TimeWarp.CurrentRateIndex > 6))
+                        {
+                            TimeWarp.SetRate(6, true, true); //Set rate to 10000x
+                        }
                     }
-                    else if ((nearestDistance < (calculatedSpeed * 27)) && (TimeWarp.CurrentRateIndex > 1))
+                    else if (lastRegisteredAsteroidDistance < 2)
                     {
-                        TimeWarp.SetRate(1, true, true); //Set rate to 5x
-                    }
-                    else if ((nearestDistance < (Math.Max((calculatedSpeed * 67), 496))) &&
-                             (TimeWarp.CurrentRateIndex > 2))
-                    {
-                        TimeWarp.SetRate(2, true, true); //Set rate to 10x
-                    }
-                    else if ((nearestDistance < (Math.Max((calculatedSpeed * 267), 696))) &&
-                             (TimeWarp.CurrentRateIndex > 3))
-                    {
-                        TimeWarp.SetRate(3, true, true); //Set rate to 50x
-                    }
-                    else if ((nearestDistance < (Math.Max((calculatedSpeed * 667), 996))) &&
-                             (TimeWarp.CurrentRateIndex > 4))
-                    {
-                        TimeWarp.SetRate(4, true, true); //Set rate to 100x
-                    }
-                    else if ((nearestDistance < (Math.Max((calculatedSpeed * 4667), 4396))) &&
-                             (TimeWarp.CurrentRateIndex > 5))
-                    {
-                        TimeWarp.SetRate(5, true, true); //Set rate to 1000x
-                    }
-                    else if ((nearestDistance < (Math.Max((calculatedSpeed * 44667), 20296))) &&
-                             (TimeWarp.CurrentRateIndex > 6))
-                    {
-                        TimeWarp.SetRate(6, true, true); //Set rate to 10000x
+                        if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
+                        {
+                            TimeWarp.SetRate(0, true, true); //Set rate to 1x
+                        }
+                        else if ((nearestDistance < (calculatedSpeed * 27)) && (TimeWarp.CurrentRateIndex > 1))
+                        {
+                            TimeWarp.SetRate(1, true, true); //Set rate to 5x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 67), 496))) &&
+                                 (TimeWarp.CurrentRateIndex > 2))
+                        {
+                            TimeWarp.SetRate(2, true, true); //Set rate to 10x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 267), 696))) &&
+                                 (TimeWarp.CurrentRateIndex > 3))
+                        {
+                            TimeWarp.SetRate(3, true, true); //Set rate to 50x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 667), 996))) &&
+                                 (TimeWarp.CurrentRateIndex > 4))
+                        {
+                            TimeWarp.SetRate(4, true, true); //Set rate to 100x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 4667), 4396))) &&
+                                 (TimeWarp.CurrentRateIndex > 5))
+                        {
+                            TimeWarp.SetRate(5, true, true); //Set rate to 1000x
+                        }
+                        else if ((nearestDistance < (Math.Max((calculatedSpeed * 44667), 20296))) &&
+                                 (TimeWarp.CurrentRateIndex > 6))
+                        {
+                            TimeWarp.SetRate(6, true, true); //Set rate to 10000x
+                        }
                     }
                 }
 
