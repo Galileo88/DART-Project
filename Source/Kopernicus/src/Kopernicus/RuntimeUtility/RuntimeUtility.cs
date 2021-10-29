@@ -280,7 +280,7 @@ namespace Kopernicus.RuntimeUtility
                         return;
                     }
                 }
-                if (lastRegisteredAsteroidDistance < 2)
+                if (lastRegisteredAsteroidDistance > 2)
                     {
                     if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                     {
