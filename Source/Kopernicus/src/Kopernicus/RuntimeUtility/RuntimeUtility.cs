@@ -253,7 +253,7 @@ namespace Kopernicus.RuntimeUtility
                         {
                             continue;
                         }
-                        else if (!vessel.mainBody.bodyName.Equals("Didymos"))
+                        else if (!vessel.mainBody.name.Contains("Didymos"))
                         {
                             continue;
                         }
@@ -275,7 +275,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 if (FlightGlobals.ActiveVessel)
                 {
-                    if ((lastRegisteredAsteroidDistance < 2) && (!FlightGlobals.ActiveVessel.landedAt.Equals("Didymos"))&& (FlightGlobals.ActiveVessel.mainBody.name.Equals("Didymos")))
+                    if ((lastRegisteredAsteroidDistance < 2) && (!FlightGlobals.ActiveVessel.landedAt.Equals("Didymos")))
                     {
                         if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                         {
