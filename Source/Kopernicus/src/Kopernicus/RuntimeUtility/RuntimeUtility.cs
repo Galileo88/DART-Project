@@ -412,6 +412,20 @@ namespace Kopernicus.RuntimeUtility
         }
         private void LateUpdate()
         {
+            FixZooming();
+            ApplyRnDPatches();
+            Force3DRendering();
+            UpdatePresetNames();
+            ApplyMapTargetPatches();
+            FixFlickeringOrbitLines();
+            ApplyOrbitIconCustomization();
+
+            // Apply changes for all bodies
+            for (Int32 i = 0; i < PSystemManager.Instance.localBodies.Count; i++)
+            {
+                ApplyOrbitVisibility(PSystemManager.Instance.localBodies[i]);
+                AtmosphereLightPatch(PSystemManager.Instance.localBodies[i]);
+            }
             if ((!userSaidStopTrackingDimorphos) && (HighLogic.LoadedScene.Equals(GameScenes.FLIGHT) || (HighLogic.LoadedScene.Equals(GameScenes.SPACECENTER) || (HighLogic.LoadedScene.Equals(GameScenes.TRACKSTATION)))))
             {
                 CollisionCheck();
@@ -433,20 +447,6 @@ namespace Kopernicus.RuntimeUtility
                 vesselDimorphos = null;
                 frameSampleDue = true;
                 frameTestDue = false;
-            }
-            FixZooming();
-            ApplyRnDPatches();
-            Force3DRendering();
-            UpdatePresetNames();
-            ApplyMapTargetPatches();
-            FixFlickeringOrbitLines();
-            ApplyOrbitIconCustomization();
-
-            // Apply changes for all bodies
-            for (Int32 i = 0; i < PSystemManager.Instance.localBodies.Count; i++)
-            {
-                ApplyOrbitVisibility(PSystemManager.Instance.localBodies[i]);
-                AtmosphereLightPatch(PSystemManager.Instance.localBodies[i]);
             }
         }
         // Run patches every time a new scene was loaded
@@ -760,7 +760,7 @@ namespace Kopernicus.RuntimeUtility
             }
 
             // Set custom Zoom-In limits
-            if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && !MapView.MapIsEnabled)
+            if (!MapView.MapIsEnabled)
             {
                 return;
             }
