@@ -275,7 +275,7 @@ namespace Kopernicus.RuntimeUtility
                 }
                 if (FlightGlobals.ActiveVessel)
                 {
-                    if ((lastRegisteredAsteroidDistance < 2) && (!FlightGlobals.ActiveVessel.landedAt.Contains("Didymos")))
+                    if ((lastRegisteredAsteroidDistance < 2) && (!FlightGlobals.ActiveVessel.Landed))
                     {
                         if ((nearestDistance < (calculatedSpeed * 7)) && (TimeWarp.CurrentRateIndex > 0))
                         {
