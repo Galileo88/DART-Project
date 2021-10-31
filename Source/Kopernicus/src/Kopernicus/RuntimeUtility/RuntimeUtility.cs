@@ -75,7 +75,6 @@ namespace Kopernicus.RuntimeUtility
         private static double incDimorphos = 0;
         private static double perDimorphos = 0;
         private static bool userSaidStopTrackingDimorphos = false;
-        private static bool firstSampleTaken;
         private static double lastRegisteredAsteroidDistance = Double.MaxValue;
         private static double calculatedSpeed = 0;
         private static PopupDialog dialogDimorphos = null;
@@ -342,21 +341,6 @@ namespace Kopernicus.RuntimeUtility
                 //Immediately begin posting/logging stats:
                 if (setupDimorphos)
                 {
-                    if (firstSampleTaken == false)
-                    {
-                        try
-                        {
-                            smaDimorphos = partDimorphos.vessel.orbit.semiMajorAxis;
-                            eccDimorphos = partDimorphos.vessel.orbit.eccentricity;
-                            incDimorphos = partDimorphos.vessel.orbit.inclination;
-                            perDimorphos = partDimorphos.vessel.orbit.period;
-                            firstSampleTaken = true;
-                        }
-                        catch
-                        {
-                            // it may generate an exception if the vessel is unloaded, this handles it.
-                        }
-                    }
                     t1 = "ORIGINAL ORBIT -- SMA:" + smaDimorphos.ToString() + " - ECC:" + eccDimorphos.ToString() + " - INC:" + incDimorphos.ToString() + " - PER:" + perDimorphos.ToString();
                     try
                     {
@@ -492,7 +476,6 @@ namespace Kopernicus.RuntimeUtility
                 vesselDimorphos = null;
                 frameSampleDue = true;
                 frameTestDue = false;
-                firstSampleTaken = false;
             }
         }
         // Run patches every time a new scene was loaded
