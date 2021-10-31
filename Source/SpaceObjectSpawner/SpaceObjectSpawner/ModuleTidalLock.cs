@@ -53,7 +53,7 @@ namespace DART.SpaceObjects
         /// Amount of force that it takes to break tidal lock.
         /// </summary>
         [KSPField]
-        public double tidalLockBreakRatio = 0.1;
+        public double tidalLockBreakRatio = 0.025;
 
         public override void OnAwake()
         {
@@ -82,6 +82,12 @@ namespace DART.SpaceObjects
             Fields["collisionAngularVelocityMagnitude"].guiActive = debugMode;
             Fields["orbitPeriod"].guiActive = debugMode;
             Fields["collisionForce"].guiActive = debugMode;
+
+            // For some reason KSP isn't reading tidalLockBreakRatio. We need to load it manually
+            ConfigNode node = getPartConfigNode();
+            if (!node.HasValue("tidalLockBreakRatio"))
+                return;
+            double.TryParse(node.GetValue("tidalLockBreakRatio"), out tidalLockBreakRatio);
         }
 
 
@@ -115,6 +121,39 @@ namespace DART.SpaceObjects
             collisionForce = Math.Abs(collisionAngularVelocityMagnitude / ( 2 * Math.PI / vessel.orbit.period) - 1 );
             if (collisionForce > tidalLockBreakRatio)
                 enableTidalLock = false;
+        }
+
+        /// <summary>
+        /// Retrieves the module's config node from the part config.
+        /// </summary>
+        /// <returns>A ConfigNode for the part module.</returns>
+        public ConfigNode getPartConfigNode()
+        {
+            if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
+                return null;
+            if (this.part.partInfo.partConfig == null)
+                return null;
+            ConfigNode[] nodes = this.part.partInfo.partConfig.GetNodes("MODULE");
+            ConfigNode partConfigNode = null;
+            ConfigNode node = null;
+            string moduleName;
+
+            //Get the switcher config node.
+            for (int index = 0; index < nodes.Length; index++)
+            {
+                node = nodes[index];
+                if (node.HasValue("name"))
+                {
+                    moduleName = node.GetValue("name");
+                    if (moduleName == this.ClassName)
+                    {
+                        partConfigNode = node;
+                        break;
+                    }
+                }
+            }
+
+            return partConfigNode;
         }
     }
 }
