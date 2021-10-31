@@ -15,7 +15,7 @@ With the installation of DART Range, Didymos and Dimorphos are added to the Kerb
 Didymos and Dimorphos are tiny targets that offer a difficult navigational challenge, but if you are able to guide a spacecraft to an impact with Dimorphos, the resulting changes are real and immediately observable.  Do you have the right stuff to save Kerbalkind from a deadly asteroid impact?  Take to the DART Range and find out.
 
 ## Installation
-Download the DART.zip file, extract the DART folder, and copy it to the GameData folder of your KSP installation.  Everything needed for it to work is self-contained; there are no required dependencies.  DART Range can also be installed via CKAN.
+Download the DART.zip file, extract the DART folder, and copy it to the GameData folder of your KSP installation.  Everything needed for it to work is self-contained; there are no required dependencies.
 
 ## Contributors
 * Galileo
