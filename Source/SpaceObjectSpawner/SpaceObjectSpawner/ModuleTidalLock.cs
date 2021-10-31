@@ -53,7 +53,7 @@ namespace DART.SpaceObjects
         /// Amount of force that it takes to break tidal lock.
         /// </summary>
         [KSPField]
-        public double tidalLockBreakRatio = 0.025;
+        public double tidalLockBreakRatio = 0.08;
 
         public override void OnAwake()
         {
