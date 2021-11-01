@@ -27,4 +27,6 @@ Download the DART.zip file, extract the DART folder, and copy it to the GameData
 * theRagingIrishman
 
 ## License
-All Rights Reserved.
+All Rights Reserved
+Kopernicus has been altered to work within DART and is licensed under GPL
+MFI is included and is licensed under MIT
