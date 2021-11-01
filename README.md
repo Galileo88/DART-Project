@@ -28,5 +28,7 @@ Download the DART.zip file, extract the DART folder, and copy it to the GameData
 
 ## License
 DART Range, Parallax, SpaceObjectSpawner - All Rights Reserved
+
 Kopernicus - GPL
+
 ModularFlightIntegrator - MIT
