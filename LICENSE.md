@@ -1,4 +1,5 @@
-DART Challenge is released under the following license:
+This product is released under the following licenses:
 
-All Rights Reserved
-
+DART Range, Parallax, SpaceObjectSpawner - All Rights Reserved
+Kopernicus - GPL
+ModularFlightIntegrator - MIT
