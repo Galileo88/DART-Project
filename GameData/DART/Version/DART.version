@@ -1,8 +1,8 @@
 {
     "NAME":"DART-Project",
-    "URL":"https://raw.githubusercontent.com/Galileo88/DART-Project/master/GameData/DART/Version/DART.version",
+    "URL":"https://raw.githubusercontent.com/Galileo88/DART-Project/main/GameData/DART/Version/DART.version",
     "DOWNLOAD":"https://github.com/Galileo88/DART-Project/releases",
-    "CHANGE_LOG_URL":"https://raw.githubusercontent.com/Galileo88/DART-Project/master/GameData/DART/Version/Changelog.md",
+    "CHANGE_LOG_URL":"https://raw.githubusercontent.com/Galileo88/DART-Project/main/GameData/DART/Version/Changelog.md",
     "VERSION":{
         "MAJOR":1,
         "MINOR":0,
